@@ -1,0 +1,46 @@
+{
+  "name": "pets--diaries",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Pets' Diaries is a web app that works as a social network for pet lovers. Here you can share funny stories, care tips, adoption advice or anything you want related to our beloved pets. You can sign up with your email or with a Google account and login to create, edit and delete posts, also like and unlike them.",
+  "author": {
+    "name": "Sara Rioseco",
+    "email": "sara.rioseco@gmail.com",
+    "url": "https://github.com/sara-rioseco/"
+  },
+  "main": "src/index.html",
+  "keywords": [
+    "typescript",
+    "social network",
+    "pets",
+    "firebase",
+    "jest"
+  ],
+  "homepage": "https://pets--diaries.web.app/",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite dev src",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "jest --coverage",
+    "start": "npm run dev"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.11",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.8"
+  },
+  "dependencies": {
+    "firebase": "^10.7.2",
+    "firebase-admin": "^12.0.0"
+  },
+  "engines": {
+    "node": ">=16.x"
+  }
+}
+
