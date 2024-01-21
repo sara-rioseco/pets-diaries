@@ -19,6 +19,9 @@
   ],
   "homepage": "https://pets--diaries.web.app/",
   "license": "MIT",
+  "icons": {
+    "16": "./src/favicon.ico"
+  },
   "scripts": {
     "dev": "vite dev src",
     "build": "tsc && vite build",

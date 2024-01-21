@@ -1,3 +1,5 @@
+import logo from '../../assets/img/logo-title.webp';
+
 export default function Profile(onNavigate: Function) {
   const profileDiv = document.createElement('div');
   const headerDiv = document.createElement('div');
@@ -6,12 +8,13 @@ export default function Profile(onNavigate: Function) {
   const homeBttn = document.createElement('button');
   const logoutButton = document.createElement('button');
   const updateUsernameButton = document.createElement('button');
-  const heartImg = document.createElement('img');
+  const logoImg = document.createElement('img');
   // const descModal = descriptionModal();
   // const updateNameModal = updateUsernameModal(onNavigate);
 
-  // heartImg.src = `${logoTitleRed}`;
-  heartImg.classList.add('heart');
+  logoImg.src = `${logo}`;
+  logoImg.alt = "logo Pets' Diaries";
+  logoImg.classList.add('logo');
   profileDiv.className = 'home-div';
   headerDiv.className = 'header-div';
   contentDiv.className = 'content-div';
@@ -30,7 +33,7 @@ export default function Profile(onNavigate: Function) {
     // userLogout().then(() => onNavigate('/'));
   });
   contentDiv.appendChild(headerDiv);
-  profileDiv.appendChild(heartImg);
+  profileDiv.appendChild(logoImg);
   // profileDiv.appendChild(descModal);
   headerDiv.appendChild(subtitle);
   contentDiv.appendChild(updateUsernameButton);

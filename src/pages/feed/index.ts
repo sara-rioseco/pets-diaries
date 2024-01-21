@@ -1,3 +1,5 @@
+import logo from '../../assets/img/logo-title.webp';
+
 export default function Feed(onNavigate: Function) {
   const timelineDiv = document.createElement('div');
   const navHomeDiv = document.createElement('div');
@@ -19,9 +21,10 @@ export default function Feed(onNavigate: Function) {
   divUserName.classList.add('divUserName');
   divSignOut.classList.add('divSignOut');
   // userName.textContent = `¡Bienvenid@, ${getLoggedUser()}!`;
-  // logoImg.src = `${logoTitleRed}`;
-  logoImg.alt = 'Logo';
-  logoImg.classList.add('heartTimeline');
+  logoImg.src = `${logo}`;
+  logoImg.alt = "logo Pets' Diaries";
+  logoImg.classList.add('feed-logo');
+  logoImg.classList.add('logo');
   logoutButton.textContent = 'Cerrar sesión';
   logoutButton.classList.add('logoutButton');
   postInput.classList.add('timelineInputBox');
@@ -39,7 +42,7 @@ export default function Feed(onNavigate: Function) {
   title.textContent = 'Comparte tu historia';
   navHomeDiv.className = 'navHome';
   timelineMainDiv.className = 'timeline-main-div';
-  timelineDiv.className = 'timeline-div';
+  timelineDiv.className = 'feed-div';
   contentDiv.className = 'timelineContentDiv';
   contentPostDiv.className = 'timelinePosts';
   postsDiv.className = '';

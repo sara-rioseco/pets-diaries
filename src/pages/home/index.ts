@@ -1,3 +1,5 @@
+import logo from '../../assets/img/logo-title.webp';
+
 export default function Home(onNavigate: Function) {
   const homeDiv = document.createElement('div');
   const headerDiv = document.createElement('div');
@@ -5,11 +7,12 @@ export default function Home(onNavigate: Function) {
   const contentDiv = document.createElement('div');
   const loginBttn = document.createElement('button');
   const registerBttn = document.createElement('button');
-  const heartImg = document.createElement('img');
+  const logoImg = document.createElement('img');
   // const descModal = descriptionModal();
 
-  // heartImg.src = `${logoTitleRed}`;
-  heartImg.classList.add('heart');
+  logoImg.src = `${logo}`;
+  logoImg.alt = "logo Pets' Diaries";
+  logoImg.classList.add('logo');
   homeDiv.className = 'home-div';
   headerDiv.className = 'header-div';
   contentDiv.className = 'content-div';
@@ -29,7 +32,7 @@ export default function Home(onNavigate: Function) {
   contentDiv.appendChild(headerDiv);
   contentDiv.appendChild(loginBttn);
   contentDiv.appendChild(registerBttn);
-  homeDiv.appendChild(heartImg);
+  homeDiv.appendChild(logoImg);
   // homeDiv.appendChild(descModal);
   headerDiv.appendChild(subtitle);
   homeDiv.appendChild(contentDiv);

@@ -1,3 +1,5 @@
+import logo from '../../assets/img/logo-title.webp';
+
 export default function Login(onNavigate: Function) {
   const loginDiv = document.createElement('div');
   const headerDiv = document.createElement('div');
@@ -7,13 +9,14 @@ export default function Login(onNavigate: Function) {
   const passwordInput = document.createElement('input');
   const loginBttn = document.createElement('button');
   const homeBttn = document.createElement('button');
-  const heartImg = document.createElement('img');
+  const logoImg = document.createElement('img');
   const logoGoogle = document.createElement('img');
   const divTitleLogin = document.createElement('li');
   // const descModal = descriptionModal();
 
-  // heartImg.src = `${logoTitleRed}`;
-  heartImg.classList.add('heart');
+  logoImg.src = `${logo}`;
+  logoImg.alt = "logo Pets' Diaries";
+  logoImg.classList.add('logo');
 
   // descModal.id = 'about-modal';
   emailInput.classList.add('loginInputBox');
@@ -70,7 +73,7 @@ export default function Login(onNavigate: Function) {
     // );
   });
 
-  loginDiv.appendChild(heartImg);
+  loginDiv.appendChild(logoImg);
   // loginDiv.appendChild(descModal);
   contentDiv.appendChild(title);
   contentDiv.appendChild(emailInput);
