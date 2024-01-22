@@ -1,14 +1,14 @@
 import redPaw from '../assets/img/like-red.webp';
 import greyPaw from '../assets/img/like-grey.webp';
 import { services } from '../services/index'; 
-import { DocumentReference } from 'firebase/firestore';
+import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 const { addLike, removeLike } = services();
 
 export const likeCount = (
   email: string,
-  docRef: DocumentReference,
-  likesArr: string[]
+  docRef: QueryDocumentSnapshot,
+  likes: string[]
 ): HTMLDivElement => {
   const wrapper = document.createElement('div');
   const likesCount = document.createElement('span');
@@ -16,27 +16,37 @@ export const likeCount = (
   
   wrapper.classList.add('like-wrapper')
   likeImg.alt = 'Like icon'
-  likeImg.classList. add('Like icon')
+  likeImg.classList.add('like-icon')
   likesCount.innerText = '(0)';
   likesCount.classList.add('like-count')
 
-  if (likesArr.includes(email)) {
-    likesCount.innerText = `${likesArr.length}`;
-    likeImg.src = `${redPaw}`
-    likeImg.addEventListener('click', () => {
+  likesCount.innerText = `(${likes.length})`;
+
+  if (likes.includes(email)) {
+    likeImg.src = redPaw
+    likeImg.addEventListener('click', async () => {
+      console.log(docRef.id, 'you unliked this, now it show be grey')
       removeLike(docRef.id)
         .then(() => {
-          likeImg.src = `${greyPaw}`;
+          likeImg.src = greyPaw;
         })
         .catch((error) => {
+          console.log(error)
           throw new Error(`${error.message}`);
         });
     });
   } else {
-    likesCount.innerHTML = `(${likesArr.length})`;
     likeImg.src = `${greyPaw}`;
     likeImg.addEventListener('click', () => {
-      addLike(docRef.id, likesArr);
+      console.log(docRef.id, 'you liked this, now it shhouled be red')
+      addLike(docRef.id, likes)        
+      .then(() => {
+        likeImg.src = redPaw;
+      })
+      .catch((error) => {
+        console.log(error)
+        throw new Error(`${error.message}`);
+      });
     })
   }
 

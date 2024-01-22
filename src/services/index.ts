@@ -19,9 +19,10 @@ import {
   arrayUnion,
   DocumentReference,
 } from 'firebase/firestore';
-import { auth, db } from '../firebase';
+import { auth, db } from '../firebase.ts';
 
 export function services() {
+
   // Authentication
   const createUser = (
     email: string,
@@ -40,26 +41,31 @@ export function services() {
   ): Promise<UserCredential> =>
     signInWithEmailAndPassword(auth, email, password);
 
-  const googleLogin = () => {
+  const googleLogin = async () => {
     const provider = new GoogleAuthProvider();
-    return signInWithPopup(auth, provider);
+    const userAuth = await signInWithPopup(auth, provider);
+    return userAuth
   };
-
-  const getDisplayName = () => auth.currentUser!.displayName;
 
   const getProfilePicture = () => auth.currentUser!.photoURL;
 
   const userLogout = () => signOut(auth);
 
   // Firestore
-  const createPost = (text: string) =>
-    addDoc(collection(db, 'posts'), {
+  const createPost = async (text: string) => {
+    try {
+      const doc = await addDoc(collection(db, 'posts'), {
       content: text,
       time: serverTimestamp(),
       email: auth.currentUser!.email,
       displayName: auth.currentUser!.displayName,
       likes: [],
-    });
+      })
+      return doc
+    } catch (e : unknown) {
+      throw new Error(`${e}`);
+    } 
+  };
 
   const editPost = async (newInput: string, docId: string) => {
     const docRef: DocumentReference = doc(db, 'posts', docId);
@@ -89,25 +95,35 @@ export function services() {
     }
   };
 
-  const addLike = (id: string, likes: string[]): void => {
-    if (likes.length === 0 || !likes.includes(auth.currentUser!.email!)) {
-      updateDoc(doc(db, 'posts', id), {
-        likes: arrayUnion(auth.currentUser!.email),
-      }).catch(error => error);
+  const addLike = async (id: string, likes: string[]): Promise<void> => {
+    const {email} = auth.currentUser!;
+    if (likes.length === 0 || !likes.includes(email!)) {
+      try { 
+        updateDoc(doc(db, 'posts', id), {
+        likes: arrayUnion(email),
+      })
+      } catch (e) {
+        throw new Error(`${e}`);    
+      }
     }
   };
 
-  const removeLike = (id: string) =>
-    updateDoc(doc(db, 'posts', id), {
-      likes: arrayRemove(auth.currentUser!.email),
-    });
+  const removeLike = async (id: string): Promise<void> => {
+    const currentAuth = auth.currentUser;
+    try {
+      updateDoc(doc(db, 'posts', id), {
+        likes: arrayRemove(currentAuth!.email),
+      });
+    } catch (e: unknown) {
+      throw new Error(`${e}`);      
+    }
+  }
 
   return {
     createUser,
     updateUser,
     userLogin,
     googleLogin,
-    getDisplayName,
     getProfilePicture,
     userLogout,
     createPost,

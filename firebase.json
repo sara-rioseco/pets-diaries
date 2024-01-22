@@ -8,5 +8,33 @@
       "source": "**",
       "destination": "/index.html"
     }
+  ],
+  "headers": [
+    {
+      "source": "**/*",
+      "headers": [
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "unsafe-none"
+        },
+        {
+          "key": "Cross-Origin-Embedder-Policy",
+          "value": "require-corp"
+        },
+        {
+          "source": "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
+          "headers": [ {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          } ]
+        }, {
+          "source": "**/*.@(jpg|jpeg|gif|png)",
+          "headers": [ {
+            "key": "Cache-Control",
+            "value": "max-age=7200"
+          } ]
+        }
+      ]
+    }
   ]
 }

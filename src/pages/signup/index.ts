@@ -1,5 +1,6 @@
 import logo from '../../assets/img/logo-title.webp';
 import { Path } from '../../models/models';
+import { aboutModal } from '../../components/about-modal';
 
 export default function SignUp(onNavigate: (pathname: Path) => void) {
   const registerDiv = document.createElement('div');
@@ -14,7 +15,7 @@ export default function SignUp(onNavigate: (pathname: Path) => void) {
   const registerBttn = document.createElement('button');
   const homeBttn = document.createElement('button');
   const logoImg = document.createElement('img');
-  // const descModal = descriptionModal();
+  const about = aboutModal();
 
   const divTitleRegister = document.createElement('li');
 
@@ -48,15 +49,14 @@ export default function SignUp(onNavigate: (pathname: Path) => void) {
   registerDiv.className = 'home-div';
   headerDiv.className = 'header-div';
   contentDiv.className = 'content-register';
-  // headerDiv.innerHTML = `<img src="${logoTitleRed}" alt="logo" id="logo">`;
+  headerDiv.innerHTML = `<img src="${logo}" alt="logo" id="logo">`;
   registerBttn.classList.add('registerBttn');
   title.textContent = 'Regístrate';
   subtitle.textContent = 'O con tu cuenta de Google';
   registerBttn.textContent = 'Registrarme';
   homeBttn.textContent = 'Volver al inicio';
-  // descModal.id = 'about-modal';
 
-  // heartImg.addEventListener('click', () => descModal.showModal());
+  logoImg.addEventListener('click', () => about.showModal());
   homeBttn.addEventListener('click', () => onNavigate('/'));
   registerBttn.addEventListener('click', e => {
     e.preventDefault();
@@ -83,7 +83,7 @@ export default function SignUp(onNavigate: (pathname: Path) => void) {
   });
 
   registerDiv.appendChild(logoImg);
-  // registerDiv.appendChild(descModal);
+  registerDiv.appendChild(about);
   contentDiv.appendChild(title);
   contentDiv.appendChild(nameInput);
   contentDiv.appendChild(emailInput);

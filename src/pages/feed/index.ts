@@ -1,5 +1,13 @@
 import logo from '../../assets/img/logo-title.webp';
 import { Path } from '../../models/models';
+import { services } from '../../services/index';
+import { aboutModal } from '../../components/about-modal';
+import { likeCount } from '../../components/like-count';
+import { postCard } from '../../components/post-card';
+import { auth, db } from '../../firebase';
+import { query, collection, orderBy, onSnapshot } from 'firebase/firestore';
+
+const { createPost, userLogout } = services();
 
 export default function Feed(onNavigate: (pathname: Path) => void) {
   const timelineDiv = document.createElement('div');
@@ -16,31 +24,29 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
   const title = document.createElement('h4');
   const postInput = document.createElement('input');
   const publishButton = document.createElement('button');
-  // const postsRef = query(collection(db, 'posts'), orderBy('time', 'desc'));
-  // const descModal = descriptionModal();
+  const postsRef = query(collection(db, 'posts'), orderBy('time', 'desc'));
+  const about = aboutModal();
 
   divUserName.classList.add('divUserName');
   divSignOut.classList.add('divSignOut');
-  // userName.textContent = `¡Bienvenid@, ${getLoggedUser()}!`;
+  userName.textContent = `Welcome, ${auth.currentUser!.displayName}!`;
   logoImg.src = `${logo}`;
   logoImg.alt = "logo Pets' Diaries";
   logoImg.classList.add('feed-logo');
   logoImg.classList.add('logo');
-  logoutButton.textContent = 'Cerrar sesión';
+  logoutButton.textContent = 'Logout';
   logoutButton.classList.add('logoutButton');
   postInput.classList.add('timelineInputBox');
-  postInput.id = 'myPostInput';
-  postInput.placeholder = 'Escribe lo que quieras publicar';
+  postInput.id = 'new-post-input';
+  postInput.placeholder = 'Write your post here';
   postInput.required = true;
   postInput.autocomplete = 'off';
   postsDiv.id = 'posts-div';
   postsDiv.className = 'publicacionPost';
-  // descModal.id = 'about-modal';
-
   publishButton.id = 'publishbutton';
-  publishButton.textContent = 'Publicar';
+  publishButton.textContent = 'Publish';
   publishButton.className = 'buttonToPost';
-  title.textContent = 'Comparte tu historia';
+  title.textContent = 'Share your stories:';
   navHomeDiv.className = 'navHome';
   timelineMainDiv.className = 'timeline-main-div';
   timelineDiv.className = 'feed-div';
@@ -48,25 +54,25 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
   contentPostDiv.className = 'timelinePosts';
   postsDiv.className = '';
 
-  // logoImg.addEventListener('click', () => descModal.showModal());
+  logoImg.addEventListener('click', () => about.showModal());
   divUserName.addEventListener('click', () => onNavigate('/profile'));
   userName.addEventListener('click', () => onNavigate('/profile'));
 
   logoutButton.addEventListener('click', () => {
-    // userLogout().then(() => onNavigate('/'));
+    userLogout().then(() => onNavigate('/'));
   });
 
   publishButton.addEventListener('click', async e => {
     e.preventDefault();
-    // const post = document.getElementById('myPostInput').value;
-    // createPost(post);
+    const post = document.querySelector('input')!;
+    await createPost(post.value);
     postInput.value = '';
   });
 
   navHomeDiv.appendChild(divUserName);
   navHomeDiv.appendChild(userName);
   navHomeDiv.appendChild(logoImg);
-  // navHomeDiv.appendChild(descModal);
+  navHomeDiv.appendChild(about);
   navHomeDiv.appendChild(logoutButton);
   contentDiv.appendChild(title);
   contentDiv.appendChild(postInput);
@@ -79,22 +85,23 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
   timelineDiv.appendChild(divSignOut);
   divSignOut.appendChild(logoutButton);
 
-  // onSnapshot(postsRef, (querySnapshot) => {
-  //   postsDiv.innerHTML = '';
-  //   querySnapshot.forEach((post) => {
-  //     const postContent = post.data({
-  //       serverTimestamps: 'estimate',
-  //     });
-  //     const name = post.data().displayName;
-  //     const localDate = postContent.time.toDate().toLocaleDateString();
-  //     const localTime = postContent.time.toDate().toLocaleTimeString().slice(0, 5);
-  //     const content = post.data().content;
-  //     const likesArr = post.data().likes;
-  //     const docId = post.id;
-  //     const spanLike = spanLikeFunc(post, likesArr);
-  //     const postDiv = createPostDiv(name, localDate, localTime, content, docId, spanLike);
-  //     postsDiv.appendChild(postDiv);
-  //   });
-  // });
+  onSnapshot(postsRef, (querySnapshot) => {
+    postsDiv.innerHTML = '';
+    querySnapshot.forEach((post) => {
+      const postContent = post.data({
+        serverTimestamps: 'estimate',
+      });
+      const name = post.data().displayName || post.data().email;
+      const localDate = postContent.time.toDate().toLocaleDateString();
+      const localTime = postContent.time.toDate().toLocaleTimeString().slice(0, 5);
+      const {content} = post.data();
+      const {email} = post.data();
+      const {likes}= post.data();
+      const docId = post.id;
+      const spanLike = likeCount(email, post, likes);
+      const postDiv = postCard(name, localDate, localTime, content, docId, spanLike);
+      postsDiv.appendChild(postDiv);
+    });
+  });
   return timelineDiv;
 }

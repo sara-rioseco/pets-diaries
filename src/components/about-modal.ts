@@ -10,6 +10,7 @@ export const aboutModal = (): HTMLDialogElement => {
   dialog.classList.add('modal', 'about-modal');
   wrapper.classList.add('wrapper', 'dialog-wrapper');
   button.classList.add('button', 'close-button');
+  button.textContent = 'Close';
 
   while (dialog.hasChildNodes()) {
     dialog.removeChild(dialog.firstChild!);

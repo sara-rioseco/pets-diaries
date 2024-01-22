@@ -1,5 +1,10 @@
 import logo from '../../assets/img/logo-title.webp';
 import { Path } from '../../models/models';
+import { aboutModal } from '../../components/about-modal';
+import { logoGoogle } from '../../components/google-button';
+import { services } from '../../services';
+
+const { googleLogin } = services();
 
 export default function Login(onNavigate: (pathname: Path) => void) {
   const loginDiv = document.createElement('div');
@@ -11,41 +16,40 @@ export default function Login(onNavigate: (pathname: Path) => void) {
   const loginBttn = document.createElement('button');
   const homeBttn = document.createElement('button');
   const logoImg = document.createElement('img');
-  const logoGoogle = document.createElement('img');
+  const googleButton = document.createElement('div');
   const divTitleLogin = document.createElement('li');
-  // const descModal = descriptionModal();
+  const about = aboutModal();
 
   logoImg.src = `${logo}`;
   logoImg.alt = "logo Pets' Diaries";
   logoImg.classList.add('logo');
 
-  // descModal.id = 'about-modal';
   emailInput.classList.add('loginInputBox');
   emailInput.id = 'myEmailInput';
-  emailInput.placeholder = 'Ingresa tu Correo';
+  emailInput.placeholder = 'Enter email';
   passwordInput.classList.add('loginInputBox');
   passwordInput.type = 'password';
   passwordInput.id = 'myPasswordInput';
-  passwordInput.placeholder = 'Contraseña';
+  passwordInput.placeholder = 'Enter password';
   passwordInput.minLength = 6;
   passwordInput.required = true;
 
   loginBttn.classList.add('loginBttn');
-  logoGoogle.className = 'logoGoogle';
+  googleButton.className = 'logoGoogle';
   homeBttn.classList.add('loginBttn');
   divTitleLogin.classList.add('divTitleLogin');
 
   loginDiv.className = 'home-div';
   headerDiv.className = 'header-div';
   contentDiv.className = 'content-login';
-  // headerDiv.innerHTML = `<img src="${logoTitleRed}" alt="logo" id="logo">`;
-  // logoGoogle.src = `${logoGoogleImg}`;
+  headerDiv.innerHTML = `<img src="${logo}" alt="logo" id="logo">`;
+  googleButton.innerHTML = `${logoGoogle}`
 
-  title.textContent = 'Iniciar Sesión';
-  loginBttn.textContent = 'Iniciar Sesión';
-  homeBttn.textContent = 'Volver al inicio';
+  title.textContent = 'Log in to your account';
+  loginBttn.textContent = 'Login';
+  homeBttn.textContent = 'Go back to home';
 
-  // heartImg.addEventListener('click', () => descModal.showModal());
+  logoImg.addEventListener('click', () => about.showModal());
   homeBttn.addEventListener('click', () => onNavigate('/'));
   loginBttn.addEventListener('click', () => {
     // const email = document.getElementById('myEmailInput').value;
@@ -64,23 +68,23 @@ export default function Login(onNavigate: (pathname: Path) => void) {
     // );
   });
 
-  logoGoogle.addEventListener('click', () => {
-    // userGoogleLogin().then(
-    //   () => {
-    //     onNavigate('/timeline');
-    //   },
-    //   // eslint-disable-next-line no-alert
-    //   () => alert('Credenciales incorrectas'),
-    // );
+  googleButton.addEventListener('click', () => {
+    googleLogin().then(
+      () => {
+        onNavigate('/feed');
+      },
+      // eslint-disable-next-line no-alert
+      () => alert('Credenciales incorrectas'),
+    );
   });
 
   loginDiv.appendChild(logoImg);
-  // loginDiv.appendChild(descModal);
+  loginDiv.appendChild(about);
   contentDiv.appendChild(title);
   contentDiv.appendChild(emailInput);
   contentDiv.appendChild(passwordInput);
   contentDiv.appendChild(loginBttn);
-  contentDiv.appendChild(logoGoogle);
+  contentDiv.appendChild(googleButton);
   contentDiv.appendChild(homeBttn);
   loginDiv.appendChild(contentDiv);
 

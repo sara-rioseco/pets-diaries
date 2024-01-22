@@ -1,5 +1,10 @@
 import logo from '../../assets/img/logo-title.webp';
 import { Path } from '../../models/models';
+import { services } from '../../services';
+import { aboutModal } from '../../components/about-modal';
+import { auth } from '../../firebase';
+
+const { userLogout } = services();
 
 export default function Profile(onNavigate: (pathname: Path) => void) {
   const profileDiv = document.createElement('div');
@@ -10,7 +15,7 @@ export default function Profile(onNavigate: (pathname: Path) => void) {
   const logoutButton = document.createElement('button');
   const updateUsernameButton = document.createElement('button');
   const logoImg = document.createElement('img');
-  // const descModal = descriptionModal();
+  const about = aboutModal();
   // const updateNameModal = updateUsernameModal(onNavigate);
 
   logoImg.src = `${logo}`;
@@ -21,21 +26,20 @@ export default function Profile(onNavigate: (pathname: Path) => void) {
   contentDiv.className = 'content-div';
   homeBttn.classList.add('loginBttn');
   logoutButton.classList.add('loginBttn');
-  // descModal.id = 'about-modal';
 
-  // heartImg.addEventListener('click', () => descModal.showModal());
-  // subtitle.textContent = `¡Bienvenid@, ${getLoggedUser()}! Este es tu perfil.`;
-  updateUsernameButton.textContent = 'Cambiar nombre';
+  logoImg.addEventListener('click', () => about.showModal());
+  subtitle.textContent = `Welcome, ${auth.currentUser!.displayName}, this is your Profile.`;
+  updateUsernameButton.textContent = 'Update username';
   // updateUsernameButton.addEventListener('click', () => updateNameModal.showModal());
-  homeBttn.textContent = 'Volver atrás';
+  homeBttn.textContent = 'Go back to feed';
   homeBttn.addEventListener('click', () => onNavigate('/feed'));
-  logoutButton.textContent = 'Cerrar sesión';
+  logoutButton.textContent = 'Logout';
   logoutButton.addEventListener('click', () => {
-    // userLogout().then(() => onNavigate('/'));
+    userLogout().then(() => onNavigate('/'));
   });
   contentDiv.appendChild(headerDiv);
   profileDiv.appendChild(logoImg);
-  // profileDiv.appendChild(descModal);
+  profileDiv.appendChild(about);
   headerDiv.appendChild(subtitle);
   contentDiv.appendChild(updateUsernameButton);
   contentDiv.appendChild(homeBttn);

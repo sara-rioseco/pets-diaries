@@ -1,5 +1,6 @@
 import logo from '../../assets/img/logo-title.webp';
 import { Path } from '../../models/models';
+import { aboutModal } from '../../components/about-modal';
 
 export default function Home(onNavigate: (pathname: Path) => void) {
   const homeDiv = document.createElement('div');
@@ -9,7 +10,7 @@ export default function Home(onNavigate: (pathname: Path) => void) {
   const loginBttn = document.createElement('button');
   const registerBttn = document.createElement('button');
   const logoImg = document.createElement('img');
-  // const descModal = descriptionModal();
+  const about = aboutModal();
 
   logoImg.src = `${logo}`;
   logoImg.alt = "logo Pets' Diaries";
@@ -17,16 +18,15 @@ export default function Home(onNavigate: (pathname: Path) => void) {
   homeDiv.className = 'home-div';
   headerDiv.className = 'header-div';
   contentDiv.className = 'content-div';
-  // descModal.id = 'about-modal';
 
   subtitle.textContent =
-    '¡Bienvenid@ a la red social para los amantes de los animales!';
-  loginBttn.textContent = 'Ingresar';
-  registerBttn.textContent = 'Registrarme';
+    'Welcome to the social network for pet lovers!';
+  loginBttn.textContent = 'Login';
+  registerBttn.textContent = 'Sign Up';
   loginBttn.classList.add('homeBttn');
   registerBttn.classList.add('homeBttn');
 
-  // heartImg.addEventListener('click', () => descModal.showModal());
+  logoImg.addEventListener('click', () => about.showModal());
   loginBttn.addEventListener('click', () => onNavigate('/login'));
   registerBttn.addEventListener('click', () => onNavigate('/signup'));
 
@@ -34,7 +34,7 @@ export default function Home(onNavigate: (pathname: Path) => void) {
   contentDiv.appendChild(loginBttn);
   contentDiv.appendChild(registerBttn);
   homeDiv.appendChild(logoImg);
-  // homeDiv.appendChild(descModal);
+  homeDiv.appendChild(about);
   headerDiv.appendChild(subtitle);
   homeDiv.appendChild(contentDiv);
   homeDiv.appendChild(contentDiv);
