@@ -1,6 +1,7 @@
 import logo from '../../assets/img/logo-title.webp';
+import { Path } from '../../models/models';
 
-export default function Profile(onNavigate: Function) {
+export default function Profile(onNavigate: (pathname: Path) => void) {
   const profileDiv = document.createElement('div');
   const headerDiv = document.createElement('div');
   const subtitle = document.createElement('h2');

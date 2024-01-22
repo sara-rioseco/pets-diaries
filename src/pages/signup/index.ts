@@ -1,6 +1,7 @@
 import logo from '../../assets/img/logo-title.webp';
+import { Path } from '../../models/models';
 
-export default function SignUp(onNavigate: Function) {
+export default function SignUp(onNavigate: (pathname: Path) => void) {
   const registerDiv = document.createElement('div');
   const headerDiv = document.createElement('div');
   const title = document.createElement('h1');

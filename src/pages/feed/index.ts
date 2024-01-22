@@ -1,6 +1,7 @@
 import logo from '../../assets/img/logo-title.webp';
+import { Path } from '../../models/models';
 
-export default function Feed(onNavigate: Function) {
+export default function Feed(onNavigate: (pathname: Path) => void) {
   const timelineDiv = document.createElement('div');
   const navHomeDiv = document.createElement('div');
   const timelineMainDiv = document.createElement('div');
