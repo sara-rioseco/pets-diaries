@@ -6,7 +6,6 @@ import {
   signInWithPopup,
   signOut,
   UserCredential,
-  User,
 } from 'firebase/auth';
 import {
   doc,
@@ -30,10 +29,14 @@ export function services() {
   ): Promise<UserCredential> =>
     createUserWithEmailAndPassword(auth, email, password);
 
-  const updateUser = (
-    user: User,
+  const updateUser = async (
     options: { displayName?: string; photoURL?: string }
-  ): Promise<void> => updateProfile(user, options);
+  ): Promise<void> => {
+    const loggedUser = auth.currentUser!;
+    await loggedUser!.getIdToken(true);
+    const updateUsername = await updateProfile(loggedUser, options);
+    return updateUsername
+  }
 
   const userLogin = (
     email: string,

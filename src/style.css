@@ -43,6 +43,10 @@
   font: inherit;
 }
 
+.modal {
+  margin: auto !important;
+}
+
 html {
   color-scheme: var(--color-scheme);
 }
@@ -60,7 +64,7 @@ body {
 }
 
 div.root::before {
-  position: absolute;
+  position: fixed;
   left: 0;
   bottom: 0;
   content: "";
@@ -68,8 +72,9 @@ div.root::before {
   height: 100%;
   background-image: url(./assets/img/pets.webp);
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-attachment:fixed;
   background-position: bottom right;
+  z-index: 1;
 }
 
 .root {
@@ -95,12 +100,12 @@ div.root::before {
   justify-content: center;
   align-items: center;
   flex-flow: column nowrap;
-  z-index: 1;
+  z-index: 2;
 }
 
 .feed-div {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .logo {

@@ -2,6 +2,7 @@ import logo from '../../assets/img/logo-title.webp';
 import { Path } from '../../models/models';
 import { services } from '../../services';
 import { aboutModal } from '../../components/about-modal';
+import { updateUsernameModal } from '../../components/update-modal';
 import { auth } from '../../firebase';
 
 const { userLogout } = services();
@@ -13,10 +14,10 @@ export default function Profile(onNavigate: (pathname: Path) => void) {
   const contentDiv = document.createElement('div');
   const homeBttn = document.createElement('button');
   const logoutButton = document.createElement('button');
-  const updateUsernameButton = document.createElement('button');
+  const updateButton = document.createElement('button');
   const logoImg = document.createElement('img');
   const about = aboutModal();
-  // const updateNameModal = updateUsernameModal(onNavigate);
+  const updateModal = updateUsernameModal(onNavigate);
 
   logoImg.src = `${logo}`;
   logoImg.alt = "logo Pets' Diaries";
@@ -29,8 +30,8 @@ export default function Profile(onNavigate: (pathname: Path) => void) {
 
   logoImg.addEventListener('click', () => about.showModal());
   subtitle.textContent = `Welcome, ${auth.currentUser!.displayName}, this is your Profile.`;
-  updateUsernameButton.textContent = 'Update username';
-  // updateUsernameButton.addEventListener('click', () => updateNameModal.showModal());
+  updateButton.textContent = 'Update username';
+  updateButton.addEventListener('click', () => updateModal.showModal());
   homeBttn.textContent = 'Go back to feed';
   homeBttn.addEventListener('click', () => onNavigate('/feed'));
   logoutButton.textContent = 'Logout';
@@ -41,10 +42,10 @@ export default function Profile(onNavigate: (pathname: Path) => void) {
   profileDiv.appendChild(logoImg);
   profileDiv.appendChild(about);
   headerDiv.appendChild(subtitle);
-  contentDiv.appendChild(updateUsernameButton);
+  contentDiv.appendChild(updateButton);
   contentDiv.appendChild(homeBttn);
   contentDiv.appendChild(logoutButton);
-  // contentDiv.appendChild(updateNameModal);
+  contentDiv.appendChild(updateModal);
   profileDiv.appendChild(contentDiv);
 
   return profileDiv;
