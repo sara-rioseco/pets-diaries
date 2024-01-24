@@ -34,9 +34,9 @@ export default function Login(onNavigate: (pathname: Path) => void) {
   passwordInput.minLength = 6;
   passwordInput.required = true;
 
-  loginBttn.classList.add('loginBttn');
+  loginBttn.classList.add('button', 'login-button');
   googleButton.className = 'logoGoogle';
-  homeBttn.classList.add('loginBttn');
+  homeBttn.classList.add('button', 'login-button');
   divTitleLogin.classList.add('divTitleLogin');
 
   loginDiv.className = 'home-div';
@@ -47,7 +47,7 @@ export default function Login(onNavigate: (pathname: Path) => void) {
 
   title.textContent = 'Log in to your account';
   loginBttn.textContent = 'Login';
-  homeBttn.textContent = 'Go back to home';
+  homeBttn.textContent = 'Go back';
 
   logoImg.addEventListener('click', () => about.showModal());
   homeBttn.addEventListener('click', () => onNavigate('/'));

@@ -51,13 +51,13 @@ export default function SignUp(onNavigate: (pathname: Path) => void) {
   passwordInput2.required = true;
   registerBttn.id = 'registerbutton';
   homeBttn.id = 'home-button';
-  homeBttn.classList.add('registerBttn');
+  homeBttn.classList.add('button', 'signup-button');
   divTitleRegister.classList.add('divTitleLogin');
   registerDiv.className = 'home-div';
   headerDiv.className = 'header-div';
   contentDiv.className = 'content-register';
   headerDiv.innerHTML = `<img src="${logo}" alt="logo" id="logo">`;
-  registerBttn.classList.add('registerBttn');
+  registerBttn.classList.add('button', 'signup-button');
   title.textContent = 'Sign Up with your email';
   subtitle.textContent = 'Or use your Google account';
   registerBttn.textContent = 'Sign Up';

@@ -23,8 +23,8 @@ export default function Home(onNavigate: (pathname: Path) => void) {
     'Welcome to the social network for pet lovers!';
   loginBttn.textContent = 'Login';
   registerBttn.textContent = 'Sign Up';
-  loginBttn.classList.add('homeBttn');
-  registerBttn.classList.add('homeBttn');
+  loginBttn.classList.add('button', 'home-button');
+  registerBttn.classList.add('button', 'home-button');
 
   logoImg.addEventListener('click', () => about.showModal());
   loginBttn.addEventListener('click', () => onNavigate('/login'));

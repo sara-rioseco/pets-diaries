@@ -24,8 +24,8 @@ export default function Profile(onNavigate: (pathname: Path) => void) {
   profileDiv.className = 'home-div';
   headerDiv.className = 'header-div';
   contentDiv.className = 'content-div';
-  homeBttn.classList.add('loginBttn');
-  logoutButton.classList.add('loginBttn');
+  homeBttn.classList.add('button', 'login-button');
+  logoutButton.classList.add('button', 'login-button');
 
   logoImg.addEventListener('click', () => about.showModal());
   subtitle.textContent = `Welcome, ${getDisplayName()}, this is your Profile.`;
