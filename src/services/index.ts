@@ -17,6 +17,12 @@ import {
   arrayRemove,
   arrayUnion,
   DocumentReference,
+  orderBy,
+  query,
+  getDocs,
+  getDoc,
+  DocumentSnapshot,
+  DocumentData,
 } from 'firebase/firestore';
 import { auth, db } from '../firebase.ts';
 
@@ -49,12 +55,26 @@ export function services() {
     const userAuth = await signInWithPopup(auth, provider);
     return userAuth
   };
-
-  const getProfilePicture = () => auth.currentUser!.photoURL;
+  const getCurrentUser = () => auth.currentUser;
+  const getEmail = () => auth.currentUser!.email;
+  const getDisplayName = () => auth.currentUser!.displayName;
+  const getProfilePicture = async () => auth.currentUser!.photoURL;
 
   const userLogout = () => signOut(auth);
 
   // Firestore
+  const getPostsRef = () => {
+    const ref = query(collection(db, 'posts'), orderBy('time', 'desc'));
+    return ref
+  }
+
+  const getPosts = async () => await getDocs(collection(db, 'posts'));
+
+  const getLikes = async (docRef: DocumentReference) : Promise<DocumentSnapshot<DocumentData, DocumentData>> => {
+    const docSnap = await getDoc(docRef)
+    return docSnap.exists() ? docSnap.data().likes : null
+  }
+
   const createPost = async (text: string) => {
     try {
       const doc = await addDoc(collection(db, 'posts'), {
@@ -72,63 +92,59 @@ export function services() {
 
   const editPost = async (newInput: string, docId: string) => {
     const docRef: DocumentReference = doc(db, 'posts', docId);
-    const currentAuth = auth.currentUser;
-    try {
-      await currentAuth!.getIdToken(true);
+      try {
+      await (getCurrentUser()!).getIdToken(true);
       await updateDoc(docRef, {
         content: `${newInput}`,
       });
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log('Error deleting post:', error);
-      throw error; // Propagate the error
+    } catch (e) {
+      throw new Error(`${e}`)
     }
   };
 
   const deletePost = async (docId: string) => {
     const docRef: DocumentReference = doc(db, 'posts', docId);
-    const currentAuth = auth.currentUser;
     try {
-      await currentAuth!.getIdToken(true);
+      await (getCurrentUser()!).getIdToken(true);
       await deleteDoc(docRef);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log('Error deleting post:', error);
-      throw error; // Propagate the error
+    } catch (e) {
+      throw new Error(`${e}`)
     }
   };
 
-  const addLike = async (id: string, likes: string[]): Promise<void> => {
-    const {email} = auth.currentUser!;
-    if (likes.length === 0 || !likes.includes(email!)) {
+  const addLike = async (docRef : DocumentReference): Promise<void> => {
       try { 
-        updateDoc(doc(db, 'posts', id), {
-        likes: arrayUnion(email),
+        updateDoc(doc(db, 'posts', docRef.id), {
+        likes: arrayUnion(getEmail()),
       })
       } catch (e) {
         throw new Error(`${e}`);    
       }
-    }
   };
 
-  const removeLike = async (id: string): Promise<void> => {
-    const currentAuth = auth.currentUser;
+  const removeLike = async (docRef : DocumentReference): Promise<void> => {
     try {
-      updateDoc(doc(db, 'posts', id), {
-        likes: arrayRemove(currentAuth!.email),
+      updateDoc(doc(db, 'posts', docRef.id), {
+        likes: arrayRemove(getEmail()),
       });
-    } catch (e: unknown) {
+    } catch (e) {
       throw new Error(`${e}`);      
     }
-  }
+  };
 
   return {
     createUser,
     updateUser,
     userLogin,
     googleLogin,
+    getCurrentUser,
+    getEmail,
+    getDisplayName,
     getProfilePicture,
     userLogout,
+    getPostsRef,
+    getPosts,
+    getLikes,
     createPost,
     editPost,
     deletePost,

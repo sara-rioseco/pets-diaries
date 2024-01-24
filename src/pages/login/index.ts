@@ -4,7 +4,7 @@ import { aboutModal } from '../../components/about-modal';
 import { logoGoogle } from '../../components/google-button';
 import { services } from '../../services';
 
-const { googleLogin } = services();
+const { userLogin, googleLogin } = services();
 
 export default function Login(onNavigate: (pathname: Path) => void) {
   const loginDiv = document.createElement('div');
@@ -52,20 +52,14 @@ export default function Login(onNavigate: (pathname: Path) => void) {
   logoImg.addEventListener('click', () => about.showModal());
   homeBttn.addEventListener('click', () => onNavigate('/'));
   loginBttn.addEventListener('click', () => {
-    // const email = document.getElementById('myEmailInput').value;
-    // const password = document.getElementById('myPasswordInput').value;
-    // userLogin(email, password).then(
-    //   () => {
-    //     onNavigate('/timeline');
-    //     // This gives you a Google Access Token. You can use it to access the Google API.
-    //     // const credential = GoogleAuthProvider.credentialFromResult(result);
-    //     // const token = credential.accessToken;
-    //     // The signed-in user info.
-    //     // const user = result.user;
-    //   },
-    //   // eslint-disable-next-line no-alert
-    //   () => alert('Credenciales incorrectas o usuario no registrado'),
-    // );
+    const email = (<HTMLInputElement>document.getElementById('myEmailInput')).value;
+    const password = (<HTMLInputElement>document.getElementById('myPasswordInput')).value;
+    userLogin(email, password).then(() => {
+        onNavigate('/feed');
+      },
+      // eslint-disable-next-line no-alert
+      () => alert('Invalid credentials'),
+    );
   });
 
   googleButton.addEventListener('click', () => {
@@ -74,7 +68,7 @@ export default function Login(onNavigate: (pathname: Path) => void) {
         onNavigate('/feed');
       },
       // eslint-disable-next-line no-alert
-      () => alert('Credenciales incorrectas'),
+      () => alert('Invalid credentials'),
     );
   });
 

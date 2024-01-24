@@ -3,9 +3,8 @@ import { Path } from '../../models/models';
 import { services } from '../../services';
 import { aboutModal } from '../../components/about-modal';
 import { updateUsernameModal } from '../../components/update-modal';
-import { auth } from '../../firebase';
 
-const { userLogout } = services();
+const { getDisplayName, userLogout } = services();
 
 export default function Profile(onNavigate: (pathname: Path) => void) {
   const profileDiv = document.createElement('div');
@@ -29,7 +28,7 @@ export default function Profile(onNavigate: (pathname: Path) => void) {
   logoutButton.classList.add('loginBttn');
 
   logoImg.addEventListener('click', () => about.showModal());
-  subtitle.textContent = `Welcome, ${auth.currentUser!.displayName}, this is your Profile.`;
+  subtitle.textContent = `Welcome, ${getDisplayName()}, this is your Profile.`;
   updateButton.textContent = 'Update username';
   updateButton.addEventListener('click', () => updateModal.showModal());
   homeBttn.textContent = 'Go back to feed';

@@ -7,7 +7,7 @@ const { addLike, removeLike } = services();
 
 export const likeCount = (
   email: string,
-  docRef: QueryDocumentSnapshot,
+  docSnap: QueryDocumentSnapshot,
   likes: string[]
 ): HTMLDivElement => {
   const wrapper = document.createElement('div');
@@ -23,28 +23,24 @@ export const likeCount = (
   likesCount.innerText = `(${likes.length})`;
 
   if (likes.includes(email)) {
-    likeImg.src = redPaw
+    likeImg.src = `${redPaw}`
     likeImg.addEventListener('click', async () => {
-      console.log(docRef.id, 'you unliked this, now it show be grey')
-      removeLike(docRef.id)
+      removeLike(docSnap.ref)
         .then(() => {
-          likeImg.src = greyPaw;
+          likeImg.src = `${greyPaw}`;
         })
         .catch((error) => {
-          console.log(error)
           throw new Error(`${error.message}`);
         });
     });
-  } else {
+  } if (!likes.includes(email)) {
     likeImg.src = `${greyPaw}`;
     likeImg.addEventListener('click', () => {
-      console.log(docRef.id, 'you liked this, now it shhouled be red')
-      addLike(docRef.id, likes)        
+      addLike(docSnap.ref)        
       .then(() => {
-        likeImg.src = redPaw;
+        likeImg.src = `${redPaw}`;
       })
       .catch((error) => {
-        console.log(error)
         throw new Error(`${error.message}`);
       });
     })

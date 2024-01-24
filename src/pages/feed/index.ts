@@ -4,10 +4,9 @@ import { services } from '../../services/index';
 import { aboutModal } from '../../components/about-modal';
 import { likeCount } from '../../components/like-count';
 import { postCard } from '../../components/post-card';
-import { auth, db } from '../../firebase';
-import { query, collection, orderBy, onSnapshot } from 'firebase/firestore';
+import { onSnapshot } from 'firebase/firestore';
 
-const { createPost, userLogout } = services();
+const { getDisplayName, getEmail, getPostsRef, createPost, userLogout } = services();
 
 export default function Feed(onNavigate: (pathname: Path) => void) {
   const timelineDiv = document.createElement('div');
@@ -24,12 +23,11 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
   const title = document.createElement('h4');
   const postInput = document.createElement('input');
   const publishButton = document.createElement('button');
-  const postsRef = query(collection(db, 'posts'), orderBy('time', 'desc'));
   const about = aboutModal();
 
   divUserName.classList.add('divUserName');
   divSignOut.classList.add('divSignOut');
-  userName.textContent = `Welcome, ${auth.currentUser!.displayName}!`;
+  userName.textContent = `Welcome, ${getDisplayName()}!`;
   logoImg.src = `${logo}`;
   logoImg.alt = "logo Pets' Diaries";
   logoImg.classList.add('feed-logo');
@@ -85,8 +83,10 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
   timelineDiv.appendChild(divSignOut);
   divSignOut.appendChild(logoutButton);
 
-  onSnapshot(postsRef, (querySnapshot) => {
-    postsDiv.innerHTML = '';
+  onSnapshot(getPostsRef(), (querySnapshot) => {
+    while (postsDiv.hasChildNodes()) {
+      postsDiv.removeChild(postsDiv.firstChild!);
+    }
     querySnapshot.forEach((post) => {
       const postContent = post.data({
         serverTimestamps: 'estimate',
@@ -95,13 +95,15 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
       const localDate = postContent.time.toDate().toLocaleDateString();
       const localTime = postContent.time.toDate().toLocaleTimeString().slice(0, 5);
       const {content} = post.data();
-      const {email} = post.data();
+      const email = getEmail();
       const {likes}= post.data();
       const docId = post.id;
-      const spanLike = likeCount(email, post, likes);
+
+      const spanLike = likeCount(email!, post, likes); // importantes de aquí pah abajo
       const postDiv = postCard(name, localDate, localTime, content, docId, spanLike);
       postsDiv.appendChild(postDiv);
     });
   });
+
   return timelineDiv;
 }

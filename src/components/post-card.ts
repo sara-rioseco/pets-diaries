@@ -1,6 +1,8 @@
 import { editModal } from "./edit-modal";
 import { deleteModal } from "./delete-modal";
-import { auth } from "../firebase";
+import { services } from "../services";
+
+const { getDisplayName } = services();
 
 export const postCard = (
   name: string,
@@ -10,7 +12,7 @@ export const postCard = (
   docId: string,
   spanLike: HTMLDivElement
 ): HTMLDivElement => {
-  const loggedUser = auth.currentUser!.displayName
+  const loggedUser = getDisplayName();
   const card = document.createElement('div');
   const wrapper = document.createElement('div');
   const title = document.createElement('p');

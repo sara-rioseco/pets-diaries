@@ -1,6 +1,12 @@
 import logo from '../../assets/img/logo-title.webp';
 import { Path } from '../../models/models';
 import { aboutModal } from '../../components/about-modal';
+import { utils } from '../../utils/index';
+import { services } from '../../services/index';
+
+const { isEmailValid, isPasswordValid, arePasswordsEqual } = utils();
+const { createUser, updateUser } = services();
+
 
 export default function SignUp(onNavigate: (pathname: Path) => void) {
   const registerDiv = document.createElement('div');
@@ -24,22 +30,23 @@ export default function SignUp(onNavigate: (pathname: Path) => void) {
   logoImg.classList.add('logo');
   nameInput.classList.add('registerInputBox');
   nameInput.id = 'myNameInput';
-  nameInput.placeholder = 'Nombre';
+  nameInput.placeholder = 'Username';
   nameInput.required = true;
   emailInput.classList.add('registerInputBox');
+  emailInput.ariaLabel = 'Email';
   emailInput.id = 'myEmailInput';
   emailInput.placeholder = 'Email';
   emailInput.required = true;
   passwordInput.classList.add('registerInputBox');
   passwordInput.type = 'password';
   passwordInput.id = 'myPasswordInput';
-  passwordInput.placeholder = 'Ingresa tu contraseña (al menos6 caracteres)';
+  passwordInput.placeholder = 'Enter a password (at least 6 characters)';
   passwordInput.minLength = 6;
   passwordInput.required = true;
   passwordInput2.classList.add('registerInputBox');
   passwordInput2.type = 'password';
   passwordInput2.id = 'myPasswordInput2';
-  passwordInput2.placeholder = 'Repetir contraseña';
+  passwordInput2.placeholder = 'Repeat password';
   passwordInput2.minLength = 6;
   passwordInput2.required = true;
   registerBttn.id = 'registerbutton';
@@ -51,35 +58,43 @@ export default function SignUp(onNavigate: (pathname: Path) => void) {
   contentDiv.className = 'content-register';
   headerDiv.innerHTML = `<img src="${logo}" alt="logo" id="logo">`;
   registerBttn.classList.add('registerBttn');
-  title.textContent = 'Regístrate';
-  subtitle.textContent = 'O con tu cuenta de Google';
-  registerBttn.textContent = 'Registrarme';
-  homeBttn.textContent = 'Volver al inicio';
+  title.textContent = 'Sign Up with your email';
+  subtitle.textContent = 'Or use your Google account';
+  registerBttn.textContent = 'Sign Up';
+  homeBttn.textContent = 'Go back';
 
   logoImg.addEventListener('click', () => about.showModal());
   homeBttn.addEventListener('click', () => onNavigate('/'));
-  registerBttn.addEventListener('click', e => {
+  registerBttn.addEventListener('click', (e) => {
     e.preventDefault();
-    // const name = document.getElementById('myNameInput').value;
-    // const email = document.getElementById('myEmailInput').value;
-    // const password1 = document.getElementById('myPasswordInput').value;
-    // const password2 = document.getElementById('myPasswordInput2').value;
-    // if (validatePassword(password1, password2) === false) {
-    // eslint-disable-next-line no-alert
-    alert('la contraseña ingresada no coincide');
-    // } else if (password1.length < 6) {
-    // eslint-disable-next-line no-alert
-    alert('la contraseña debe tener al menos 6 caracteres');
-    // } else if (validateEmail(email) === false) {
-    // eslint-disable-next-line no-alert
-    alert('la contraseña sí coincide pero el correo electrónico no es válido');
-    // } else {
-    // createUser(email, password1)
-    // .then(updateUsername(name))
-    // eslint-disable-next-line no-console
-    // .catch((err) => console.log('ERROR', err));
-    onNavigate('/feed');
-    // }
+    const displayName = (<HTMLInputElement>document.getElementById('myNameInput')).value;
+    const email = (<HTMLInputElement>document.getElementById('myEmailInput')).value;
+    const password1 = (<HTMLInputElement>document.getElementById('myPasswordInput')).value;
+    const password2 = (<HTMLInputElement>document.getElementById('myPasswordInput2')).value;
+    if (!arePasswordsEqual(password1, password2)) {
+      alert('Passwords do not match');
+      window.location.reload();
+      return
+    }
+    if (!isPasswordValid(password1)) {
+      alert('Password must have a minimum of eight characters and at least one uppercase letter, one lowercase letter and one number')
+      window.location.reload();
+      return
+    }
+    if (!isEmailValid(email)) {
+      alert('Invalid email address');
+      window.location.reload();
+      return
+    } else {
+    createUser(email, password1)
+    .then(() => {
+      updateUser({displayName: displayName})
+      .then(() => onNavigate('/feed'))
+    })
+    .catch((e) => {
+      throw new Error(`${e}`)
+    })
+    }
   });
 
   registerDiv.appendChild(logoImg);

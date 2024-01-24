@@ -1,28 +1,22 @@
-import { auth } from '../firebase.ts'
 import { Path } from '../models/models.ts';
 import { services } from '../services/index.ts'
 
-const { updateUser } = services();
+const { getDisplayName, updateUser } = services();
 
 export const updateUsernameModal = (onNavigate: (pathname: Path) => void): HTMLDialogElement => {
   const dialog = document.createElement('dialog');
   const wrapper = document.createElement('div');
   const text = document.createElement('p');
-  const input = document.createElement('textarea');
+  const input = document.createElement('input');
   const updateButton = document.createElement('button');
   const cancelButton = document.createElement('button');
 
   dialog.classList.add('modal', 'update-modal');
   updateButton.classList.add('button', 'update-button');
   cancelButton.classList.add('button', 'cancel-button');
-  dialog.id = 'edit-modal';
-  dialog.style.height = '200px';
-  text.innerHTML = '';
   text.innerText = 'Enter your new username';
   input.id = 'new-name';
-  input.style.height = '70px';
-  input.innerText = auth.currentUser!.displayName!;
-  input.style.width = '400px';
+  input.value = getDisplayName()!;
   updateButton.textContent = 'Change Username';
   cancelButton.textContent = 'Cancel';
 
@@ -31,7 +25,7 @@ export const updateUsernameModal = (onNavigate: (pathname: Path) => void): HTMLD
   }
 
   updateButton.addEventListener('click', async () => {
-    let newName = document.getElementById('new-name')!.textContent!;
+    let newName = (<HTMLInputElement>document.getElementById('new-name')).value;
     newName = input.value;
     await updateUser({
       displayName: newName, photoURL: '',
