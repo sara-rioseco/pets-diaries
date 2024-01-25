@@ -8,8 +8,7 @@ const { userLogin, googleLogin } = services();
 
 export default function Login(onNavigate: (pathname: Path) => void) {
   const loginDiv = document.createElement('div');
-  const headerDiv = document.createElement('div');
-  const title = document.createElement('h1');
+  const title = document.createElement('h2');
   const contentDiv = document.createElement('div');
   const emailInput = document.createElement('input');
   const passwordInput = document.createElement('input');
@@ -24,12 +23,12 @@ export default function Login(onNavigate: (pathname: Path) => void) {
   logoImg.alt = "logo Pets' Diaries";
   logoImg.classList.add('logo');
 
-  emailInput.classList.add('loginInputBox');
-  emailInput.id = 'myEmailInput';
+  emailInput.classList.add('input', 'email-input');
+  emailInput.id = 'email-input';
   emailInput.placeholder = 'Enter email';
-  passwordInput.classList.add('loginInputBox');
+  passwordInput.classList.add('input', 'password-input');
   passwordInput.type = 'password';
-  passwordInput.id = 'myPasswordInput';
+  passwordInput.id = 'password-input';
   passwordInput.placeholder = 'Enter password';
   passwordInput.minLength = 6;
   passwordInput.required = true;
@@ -40,24 +39,21 @@ export default function Login(onNavigate: (pathname: Path) => void) {
   divTitleLogin.classList.add('divTitleLogin');
 
   loginDiv.className = 'home-div';
-  headerDiv.className = 'header-div';
-  contentDiv.className = 'content-login';
-  headerDiv.innerHTML = `<img src="${logo}" alt="logo" id="logo">`;
+  contentDiv.className = 'content-wrapper';
   googleButton.innerHTML = `${logoGoogle}`
 
-  title.textContent = 'Log in to your account';
+  title.textContent = 'Log into your account';
   loginBttn.textContent = 'Login';
   homeBttn.textContent = 'Go back';
 
   logoImg.addEventListener('click', () => about.showModal());
   homeBttn.addEventListener('click', () => onNavigate('/'));
   loginBttn.addEventListener('click', () => {
-    const email = (<HTMLInputElement>document.getElementById('myEmailInput')).value;
-    const password = (<HTMLInputElement>document.getElementById('myPasswordInput')).value;
+    const email = (<HTMLInputElement>document.getElementById('email-input')).value;
+    const password = (<HTMLInputElement>document.getElementById('password-input')).value;
     userLogin(email, password).then(() => {
         onNavigate('/feed');
       },
-      // eslint-disable-next-line no-alert
       () => alert('Invalid credentials'),
     );
   });
@@ -67,7 +63,6 @@ export default function Login(onNavigate: (pathname: Path) => void) {
       () => {
         onNavigate('/feed');
       },
-      // eslint-disable-next-line no-alert
       () => alert('Invalid credentials'),
     );
   });

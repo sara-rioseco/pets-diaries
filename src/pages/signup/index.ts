@@ -10,9 +10,7 @@ const { createUser, updateUser } = services();
 
 export default function SignUp(onNavigate: (pathname: Path) => void) {
   const registerDiv = document.createElement('div');
-  const headerDiv = document.createElement('div');
-  const title = document.createElement('h1');
-  const subtitle = document.createElement('h3');
+  const title = document.createElement('h2');
   const contentDiv = document.createElement('div');
   const nameInput = document.createElement('input');
   const emailInput = document.createElement('input');
@@ -28,38 +26,34 @@ export default function SignUp(onNavigate: (pathname: Path) => void) {
   logoImg.src = `${logo}`;
   logoImg.alt = "logo Pets' Diaries";
   logoImg.classList.add('logo');
-  nameInput.classList.add('registerInputBox');
-  nameInput.id = 'myNameInput';
+  nameInput.classList.add('input');
+  nameInput.id = 'name-input';
   nameInput.placeholder = 'Username';
   nameInput.required = true;
-  emailInput.classList.add('registerInputBox');
+  emailInput.classList.add('input', 'email-input');
+  emailInput.type = 'email';
   emailInput.ariaLabel = 'Email';
-  emailInput.id = 'myEmailInput';
+  emailInput.id = 'email-input';
   emailInput.placeholder = 'Email';
   emailInput.required = true;
-  passwordInput.classList.add('registerInputBox');
+  passwordInput.classList.add('input', 'password-input');
   passwordInput.type = 'password';
-  passwordInput.id = 'myPasswordInput';
-  passwordInput.placeholder = 'Enter a password (at least 6 characters)';
-  passwordInput.minLength = 6;
+  passwordInput.id = 'password-input';
+  passwordInput.placeholder = 'Enter a password';
+  passwordInput.minLength = 8;
   passwordInput.required = true;
-  passwordInput2.classList.add('registerInputBox');
+  passwordInput2.classList.add('input', 'password-input');
   passwordInput2.type = 'password';
-  passwordInput2.id = 'myPasswordInput2';
+  passwordInput2.id = 'password-input-2';
   passwordInput2.placeholder = 'Repeat password';
-  passwordInput2.minLength = 6;
+  passwordInput2.minLength = 8;
   passwordInput2.required = true;
-  registerBttn.id = 'registerbutton';
-  homeBttn.id = 'home-button';
   homeBttn.classList.add('button', 'signup-button');
   divTitleRegister.classList.add('divTitleLogin');
   registerDiv.className = 'home-div';
-  headerDiv.className = 'header-div';
-  contentDiv.className = 'content-register';
-  headerDiv.innerHTML = `<img src="${logo}" alt="logo" id="logo">`;
+  contentDiv.className = 'content-wrapper';
   registerBttn.classList.add('button', 'signup-button');
   title.textContent = 'Sign Up with your email';
-  subtitle.textContent = 'Or use your Google account';
   registerBttn.textContent = 'Sign Up';
   homeBttn.textContent = 'Go back';
 
@@ -67,10 +61,10 @@ export default function SignUp(onNavigate: (pathname: Path) => void) {
   homeBttn.addEventListener('click', () => onNavigate('/'));
   registerBttn.addEventListener('click', (e) => {
     e.preventDefault();
-    const displayName = (<HTMLInputElement>document.getElementById('myNameInput')).value;
-    const email = (<HTMLInputElement>document.getElementById('myEmailInput')).value;
-    const password1 = (<HTMLInputElement>document.getElementById('myPasswordInput')).value;
-    const password2 = (<HTMLInputElement>document.getElementById('myPasswordInput2')).value;
+    const displayName = (<HTMLInputElement>document.getElementById('name-input')).value;
+    const email = (<HTMLInputElement>document.getElementById('email-input')).value;
+    const password1 = (<HTMLInputElement>document.getElementById('password-input')).value;
+    const password2 = (<HTMLInputElement>document.getElementById('password-input-2')).value;
     if (!arePasswordsEqual(password1, password2)) {
       alert('Passwords do not match');
       window.location.reload();

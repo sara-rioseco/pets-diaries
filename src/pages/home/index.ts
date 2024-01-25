@@ -4,8 +4,7 @@ import { aboutModal } from '../../components/about-modal';
 
 export default function Home(onNavigate: (pathname: Path) => void) {
   const homeDiv = document.createElement('div');
-  const headerDiv = document.createElement('div');
-  const subtitle = document.createElement('h2');
+  const title = document.createElement('h2');
   const contentDiv = document.createElement('div');
   const loginBttn = document.createElement('button');
   const registerBttn = document.createElement('button');
@@ -16,10 +15,9 @@ export default function Home(onNavigate: (pathname: Path) => void) {
   logoImg.alt = "logo Pets' Diaries";
   logoImg.classList.add('logo');
   homeDiv.className = 'home-div';
-  headerDiv.className = 'header-div';
-  contentDiv.className = 'content-div';
+  contentDiv.className = 'content-wrapper';
 
-  subtitle.textContent =
+  title.textContent =
     'Welcome to the social network for pet lovers!';
   loginBttn.textContent = 'Login';
   registerBttn.textContent = 'Sign Up';
@@ -30,14 +28,12 @@ export default function Home(onNavigate: (pathname: Path) => void) {
   loginBttn.addEventListener('click', () => onNavigate('/login'));
   registerBttn.addEventListener('click', () => onNavigate('/signup'));
 
-  contentDiv.appendChild(headerDiv);
+  contentDiv.appendChild(title);
   contentDiv.appendChild(loginBttn);
   contentDiv.appendChild(registerBttn);
   homeDiv.appendChild(logoImg);
   homeDiv.appendChild(about);
-  headerDiv.appendChild(subtitle);
   homeDiv.appendChild(contentDiv);
-  homeDiv.appendChild(contentDiv);
-
+  
   return homeDiv;
 }

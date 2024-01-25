@@ -39,8 +39,7 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
   postInput.placeholder = 'Write your post here';
   postInput.required = true;
   postInput.autocomplete = 'off';
-  postsDiv.id = 'posts-div';
-  postsDiv.className = 'publicacionPost';
+  postsDiv.classList.add('posts-div');
   publishButton.id = 'publishbutton';
   publishButton.textContent = 'Publish';
   publishButton.className = 'buttonToPost';
@@ -50,7 +49,6 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
   timelineDiv.className = 'feed-div';
   contentDiv.className = 'timelineContentDiv';
   contentPostDiv.className = 'timelinePosts';
-  postsDiv.className = '';
 
   logoImg.addEventListener('click', () => about.showModal());
   divUserName.addEventListener('click', () => onNavigate('/profile'));
@@ -93,7 +91,7 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
       });
       const name = post.data().displayName || post.data().email;
       const localDate = postContent.time.toDate().toLocaleDateString();
-      const localTime = postContent.time.toDate().toLocaleTimeString().slice(0, 5);
+      const localTime = postContent.time.toDate().toLocaleTimeString();
       const {content} = post.data();
       const email = getEmail();
       const {likes}= post.data();
