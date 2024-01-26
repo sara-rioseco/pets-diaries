@@ -7,7 +7,7 @@ import { likeCount } from '../../components/like-count';
 import { postCard } from '../../components/post-card';
 import { onSnapshot } from 'firebase/firestore';
 
-const { getDisplayName, getCurrentUser, getProfilePicture, getEmail, getPostsRef, createPost, userLogout } = services();
+const { getDisplayName, getProfilePicture, getEmail, getPostsRef, createPost, userLogout } = services();
 
 export default function Feed(onNavigate: (pathname: Path) => void) {
   const feed = document.createElement('div');
@@ -30,11 +30,6 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
   userImg.loading = "lazy";
   userImg.alt = "User's image";
   userImg.classList.add('img', 'user-img');
-  // userImg.onerror = function (e) {
-  //   e.stopPropagation();
-  //   this.src = `${img}`
-  // }
-  
   user.textContent = `Welcome, ${getDisplayName()}!`;
   logoImg.src = `${logo}`;
   logoImg.alt = "logo Pets' Diaries";
@@ -81,9 +76,6 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
   feed.appendChild(header);
   feed.appendChild(nav);
   feed.appendChild(posts);
-
-  console.log('user', getCurrentUser())
-  console.log('profile pic', getProfilePicture());
 
   onSnapshot(getPostsRef(), (querySnapshot) => {
     while (posts.hasChildNodes()) {
