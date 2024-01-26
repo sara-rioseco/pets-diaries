@@ -1,4 +1,5 @@
 import logo from '../../assets/img/logo-title.webp';
+import img from '../../assets/img/user-image.webp';
 import { Path } from '../../models/models';
 import { services } from '../../services/index';
 import { aboutModal } from '../../components/about-modal';
@@ -6,53 +7,56 @@ import { likeCount } from '../../components/like-count';
 import { postCard } from '../../components/post-card';
 import { onSnapshot } from 'firebase/firestore';
 
-const { getDisplayName, getEmail, getPostsRef, createPost, userLogout } = services();
+const { getDisplayName, getCurrentUser, getProfilePicture, getEmail, getPostsRef, createPost, userLogout } = services();
 
 export default function Feed(onNavigate: (pathname: Path) => void) {
-  const timelineDiv = document.createElement('div');
-  const navHomeDiv = document.createElement('div');
-  const timelineMainDiv = document.createElement('div');
+  const feed = document.createElement('div');
+  
+  const header = document.createElement('header');
   const logoImg = document.createElement('img');
+  
+  const nav = document.createElement('nav');
+  const userImg = document.createElement('img');
+  const user = document.createElement('h3');
   const logoutButton = document.createElement('button');
-  const divUserName = document.createElement('div');
-  const userName = document.createElement('span');
-  const divSignOut = document.createElement('div');
-  const contentDiv = document.createElement('div');
-  const contentPostDiv = document.createElement('div');
-  const postsDiv = document.createElement('div');
-  const title = document.createElement('h4');
-  const postInput = document.createElement('input');
+  const title = document.createElement('h3');
+  const input = document.createElement('input');
   const publishButton = document.createElement('button');
   const about = aboutModal();
 
-  divUserName.classList.add('divUserName');
-  divSignOut.classList.add('divSignOut');
-  userName.textContent = `Welcome, ${getDisplayName()}!`;
+  const posts = document.createElement('div');
+
+  userImg.src = `${getProfilePicture() || img}`;
+  userImg.loading = "lazy";
+  userImg.alt = "User's image";
+  userImg.classList.add('img', 'user-img');
+  // userImg.onerror = function (e) {
+  //   e.stopPropagation();
+  //   this.src = `${img}`
+  // }
+  
+  user.textContent = `Welcome, ${getDisplayName()}!`;
   logoImg.src = `${logo}`;
   logoImg.alt = "logo Pets' Diaries";
-  logoImg.classList.add('feed-logo');
-  logoImg.classList.add('logo');
+  logoImg.classList.add('logo', 'feed-logo');
   logoutButton.textContent = 'Logout';
-  logoutButton.classList.add('logoutButton');
-  postInput.classList.add('timelineInputBox');
-  postInput.id = 'new-post-input';
-  postInput.placeholder = 'Write your post here';
-  postInput.required = true;
-  postInput.autocomplete = 'off';
-  postsDiv.classList.add('posts-div');
-  publishButton.id = 'publishbutton';
+  logoutButton.classList.add('button', 'logout-button', 'small-button');
+  input.classList.add('input', 'feed-input');
+  input.id = 'new-post-input';
+  input.placeholder = 'Write your post here';
+  input.required = true;
+  input.autocomplete = 'off';
+  posts.classList.add('posts-wrapper');
   publishButton.textContent = 'Publish';
-  publishButton.className = 'buttonToPost';
+  publishButton.classList.add('button', 'publish-button', 'small-button');
   title.textContent = 'Share your stories:';
-  navHomeDiv.className = 'navHome';
-  timelineMainDiv.className = 'timeline-main-div';
-  timelineDiv.className = 'feed-div';
-  contentDiv.className = 'timelineContentDiv';
-  contentPostDiv.className = 'timelinePosts';
+  title.classList.add('title', 'post-title');
+  header.className = 'header';
+  feed.className = 'feed-div';
 
   logoImg.addEventListener('click', () => about.showModal());
-  divUserName.addEventListener('click', () => onNavigate('/profile'));
-  userName.addEventListener('click', () => onNavigate('/profile'));
+  user.addEventListener('click', () => onNavigate('/profile'));
+  userImg.addEventListener('click', () => onNavigate('/profile'));
 
   logoutButton.addEventListener('click', () => {
     userLogout().then(() => onNavigate('/'));
@@ -62,28 +66,28 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
     e.preventDefault();
     const post = document.querySelector('input')!;
     await createPost(post.value);
-    postInput.value = '';
+    input.value = '';
   });
 
-  navHomeDiv.appendChild(divUserName);
-  navHomeDiv.appendChild(userName);
-  navHomeDiv.appendChild(logoImg);
-  navHomeDiv.appendChild(about);
-  navHomeDiv.appendChild(logoutButton);
-  contentDiv.appendChild(title);
-  contentDiv.appendChild(postInput);
-  contentDiv.appendChild(publishButton);
-  timelineDiv.appendChild(navHomeDiv);
-  contentPostDiv.appendChild(postsDiv);
-  timelineMainDiv.appendChild(contentDiv);
-  timelineMainDiv.appendChild(contentPostDiv);
-  timelineDiv.appendChild(timelineMainDiv);
-  timelineDiv.appendChild(divSignOut);
-  divSignOut.appendChild(logoutButton);
+  header.appendChild(logoImg);
+  nav.appendChild(userImg);
+  nav.appendChild(user);
+  nav.appendChild(logoutButton);
+  nav.appendChild(title);
+  nav.appendChild(input);
+  nav.appendChild(publishButton);
+  nav.appendChild(about);
+
+  feed.appendChild(header);
+  feed.appendChild(nav);
+  feed.appendChild(posts);
+
+  console.log('user', getCurrentUser())
+  console.log('profile pic', getProfilePicture());
 
   onSnapshot(getPostsRef(), (querySnapshot) => {
-    while (postsDiv.hasChildNodes()) {
-      postsDiv.removeChild(postsDiv.firstChild!);
+    while (posts.hasChildNodes()) {
+      posts.removeChild(posts.firstChild!);
     }
     querySnapshot.forEach((post) => {
       const postContent = post.data({
@@ -99,9 +103,9 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
 
       const spanLike = likeCount(email!, post, likes); // importantes de aquí pah abajo
       const postDiv = postCard(name, localDate, localTime, content, docId, spanLike);
-      postsDiv.appendChild(postDiv);
+      posts.appendChild(postDiv);
     });
   });
 
-  return timelineDiv;
+  return feed;
 }

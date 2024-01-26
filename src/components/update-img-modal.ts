@@ -1,9 +1,9 @@
 import { Path } from '../models/models.ts';
 import { services } from '../services/index.ts'
 
-const { getDisplayName, updateUser } = services();
+const { updateUser } = services();
 
-export const updateUsernameModal = (onNavigate: (pathname: Path) => void): HTMLDialogElement => {
+export const updateImgModal = (onNavigate: (pathname: Path) => void): HTMLDialogElement => {
   const dialog = document.createElement('dialog');
   const wrapper = document.createElement('div');
   const text = document.createElement('p');
@@ -12,12 +12,13 @@ export const updateUsernameModal = (onNavigate: (pathname: Path) => void): HTMLD
   const cancelButton = document.createElement('button');
 
   dialog.classList.add('modal', 'update-modal');
-  updateButton.classList.add('button', 'update-button');
-  cancelButton.classList.add('button', 'cancel-button');
-  text.innerText = 'Enter your new username';
-  input.id = 'new-name';
-  input.value = getDisplayName()!;
-  updateButton.textContent = 'Change Username';
+  wrapper.classList.add('wrapper', 'dialog-wrapper');
+  updateButton.classList.add('button', 'update-button', 'small-button');
+  cancelButton.classList.add('button', 'cancel-button', 'small-button');
+  text.innerText = 'Enter the url of you image';
+  input.id = 'new-img';
+  input.classList.add('input');
+  updateButton.textContent = 'Change Picture';
   cancelButton.textContent = 'Cancel';
 
   while (dialog.hasChildNodes()) {
@@ -25,10 +26,10 @@ export const updateUsernameModal = (onNavigate: (pathname: Path) => void): HTMLD
   }
 
   updateButton.addEventListener('click', async () => {
-    let newName = (<HTMLInputElement>document.getElementById('new-name')).value;
-    newName = input.value;
+    let newImg = (<HTMLInputElement>document.getElementById('new-img')).value;
+    newImg = input.value;
     await updateUser({
-      displayName: newName, photoURL: '',
+      photoURL: newImg
     }).then(() => {
       dialog.close();
       onNavigate('/feed')

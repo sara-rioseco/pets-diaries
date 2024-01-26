@@ -36,7 +36,7 @@ export function services() {
     createUserWithEmailAndPassword(auth, email, password);
 
   const updateUser = async (
-    options: { displayName?: string; photoURL?: string }
+    options: { displayName?: string, photoURL?: string }
   ): Promise<void> => {
     const loggedUser = auth.currentUser!;
     await loggedUser!.getIdToken(true);
@@ -58,7 +58,7 @@ export function services() {
   const getCurrentUser = () => auth.currentUser;
   const getEmail = () => auth.currentUser!.email;
   const getDisplayName = () => auth.currentUser!.displayName;
-  const getProfilePicture = async () => auth.currentUser!.photoURL;
+  const getProfilePicture = () => auth.currentUser?.photoURL;
 
   const userLogout = () => signOut(auth);
 

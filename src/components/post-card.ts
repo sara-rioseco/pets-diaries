@@ -28,9 +28,9 @@ export const postCard = (
   title.classList.add('title', 'post-title');
   text.classList.add('text', 'post-text');
   buttons.classList.add('buttons', 'button-group');
-  editButton.classList.add('button', 'edit-button', 'post-edit-button');
+  editButton.classList.add('button', 'edit-button', 'post-edit-button', 'small-button');
   editButton.textContent = 'Edit';
-  deleteButton.classList.add('button', 'edit-button', 'post-edit-button');
+  deleteButton.classList.add('button', 'edit-button', 'post-edit-button', 'small-button');
   deleteButton.textContent = 'Delete';
   title.textContent = `${name} published on ${localDate} at ${localTime} :`;
   text.textContent = `${content}`
@@ -55,7 +55,8 @@ export const postCard = (
     wrapper.appendChild(deleteDialog);
   }
 
-  wrapper.appendChild(spanLike)
+  buttons.appendChild(spanLike);
+  wrapper.appendChild(buttons)
   card.appendChild(wrapper);
   return card;
 };

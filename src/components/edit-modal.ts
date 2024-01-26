@@ -16,12 +16,13 @@ export const editModal = (
   dialog.id = 'edit-modal';
   dialog.classList.add('modal', 'edit-modal');
   wrapper.classList.add('wrapper', 'dialog-wrapper');
-  cancelButton.classList.add('button', 'cancel-button');
-  editButton.classList.add('button', 'edit-button');
+  cancelButton.classList.add('button', 'cancel-button', 'small-button');
+  editButton.classList.add('button', 'edit-button', 'small-button');
   cancelButton.textContent = 'Cancel';
   editButton.textContent = 'Edit';
   text.innerText = 'Edit your post:';
   input.id = 'new-input';
+  input.classList.add('input');
   input.innerText = `${content}`;
 
   while (dialog.hasChildNodes()) {
