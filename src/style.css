@@ -478,6 +478,9 @@ button.small-button {
 }
 /* Mobile */
 @media (max-width: 500px) {
+  h2 {
+    text-align: center;
+  }
 
   div.root:before {
     background-size: contain;
