@@ -5,6 +5,7 @@ import { services } from '../../services/index';
 import { aboutModal } from '../../components/about-modal';
 import { likeCount } from '../../components/like-count';
 import { postCard } from '../../components/post-card';
+import { topButton } from '../../components/top-button';
 import { onSnapshot } from 'firebase/firestore';
 
 const { getDisplayName, getProfilePicture, getEmail, getPostsRef, createPost, userLogout } = services();
@@ -25,6 +26,7 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
   const about = aboutModal();
 
   const posts = document.createElement('div');
+  const upButton = topButton();
 
   userImg.src = `${getProfilePicture() || img}`;
   userImg.loading = "lazy";
@@ -64,7 +66,27 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
     input.value = '';
   });
 
+  
+  // ========= BACK TO TOP BUTTON =========
+  function scroll() {
+    document.body.scrollTop > 20 || document.documentElement.scrollTop > 20
+      ? upButton.style.display = "flex"
+      : upButton.style.display = "none"
+  }
+  
+  function toTop() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+  
+  window.onscroll = () => scroll();
+  upButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    toTop();
+  })
+
   header.appendChild(logoImg);
+
   nav.appendChild(userImg);
   nav.appendChild(user);
   nav.appendChild(logoutButton);
@@ -76,6 +98,7 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
   feed.appendChild(header);
   feed.appendChild(nav);
   feed.appendChild(posts);
+  feed.appendChild(upButton)
 
   onSnapshot(getPostsRef(), (querySnapshot) => {
     while (posts.hasChildNodes()) {
@@ -101,3 +124,4 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
 
   return feed;
 }
+  
