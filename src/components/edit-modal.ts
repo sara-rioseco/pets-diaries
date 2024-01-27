@@ -22,7 +22,8 @@ export const editModal = (
   editButton.textContent = 'Edit';
   text.innerText = 'Edit your post:';
   input.id = 'new-input';
-  input.classList.add('input');
+  input.classList.add('textarea');
+  input.rows = 4;
   input.innerText = `${content}`;
 
   while (dialog.hasChildNodes()) {

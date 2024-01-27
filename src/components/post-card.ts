@@ -32,7 +32,7 @@ export const postCard = (
   editButton.textContent = 'Edit';
   deleteButton.classList.add('button', 'edit-button', 'post-edit-button', 'small-button');
   deleteButton.textContent = 'Delete';
-  title.textContent = `${name} published on ${localDate} at ${localTime} :`;
+  title.textContent = `${name} published on ${localDate} at ${localTime}`;
   text.textContent = `${content}`
 
   wrapper.appendChild(title);
