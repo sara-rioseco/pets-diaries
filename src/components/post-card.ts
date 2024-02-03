@@ -24,6 +24,7 @@ export const postCard = (
   const editDialog = editModal(`${content}`, `${docId}`);
 
   card.classList.add('card', 'post-card');
+  card.id = `post-${docId.slice(0, 6)}`
   wrapper.classList.add('wrapper', 'post-card-wrapper');
   title.classList.add('title', 'post-title');
   text.classList.add('text', 'post-text');

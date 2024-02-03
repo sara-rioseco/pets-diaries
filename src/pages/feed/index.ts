@@ -6,9 +6,9 @@ import { aboutModal } from '../../components/about-modal';
 import { likeCount } from '../../components/like-count';
 import { postCard } from '../../components/post-card';
 import { topButton } from '../../components/top-button';
-import { onSnapshot } from 'firebase/firestore';
+import { DocumentData, QueryDocumentSnapshot, onSnapshot } from 'firebase/firestore';
 
-const { getDisplayName, getProfilePicture, getEmail, getPostsRef, createPost, userLogout } = services();
+const { getDisplayName, getProfilePicture, getEmail, getFirstPostsRef, getNextFivePosts, countPosts, createPost, userLogout } = services();
 
 export default function Feed(onNavigate: (pathname: Path) => void) {
   const feed = document.createElement('div');
@@ -26,6 +26,7 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
   const about = aboutModal();
 
   const posts = document.createElement('div');
+  const loading = document.createElement('div');
   const upButton = topButton();
 
   userImg.src = `${getProfilePicture() || img}`;
@@ -44,6 +45,8 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
   input.required = true;
   input.autocomplete = 'off';
   posts.classList.add('posts-wrapper');
+  loading.classList.add('loading');
+  loading.textContent = 'Loading posts...';
   publishButton.textContent = 'Publish';
   publishButton.classList.add('button', 'publish-button', 'small-button');
   title.textContent = 'Share your stories:';
@@ -100,10 +103,14 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
   feed.appendChild(posts);
   feed.appendChild(upButton)
 
-  onSnapshot(getPostsRef(), (querySnapshot) => {
+  // INITIAL ON SNAPSHOT (gets first 5 posts from collection)
+  let lastPost: QueryDocumentSnapshot<DocumentData, DocumentData> // LAST POST ON SCREEN
+
+  onSnapshot(getFirstPostsRef(), (querySnapshot) => {
     while (posts.hasChildNodes()) {
       posts.removeChild(posts.firstChild!);
     }
+    lastPost = querySnapshot.docs[querySnapshot.docs.length - 1]; // UPDATE LAST POST
     querySnapshot.forEach((post) => {
       const postContent = post.data({
         serverTimestamps: 'estimate',
@@ -115,13 +122,55 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
       const email = getEmail();
       const {likes}= post.data();
       const docId = post.id;
-
-      const spanLike = likeCount(email!, post, likes); // importantes de aquí pah abajo
+      const spanLike = likeCount(email!, post, likes);
       const postDiv = postCard(name, localDate, localTime, content, docId, spanLike);
       posts.appendChild(postDiv);
     });
+    posts.appendChild(loading);
+    // ADD SCROLL EVENT AFTER ON SNAPSHOT
+    document.addEventListener('scroll', handleScroll)
+    const meow = async () => {
+       const gato = await countPosts()
+       console.log(gato, lastPost.data())
+    }
+    meow();
   });
 
+  let count = 0
+  // HANDLE SCROLL EVENT WHEN USER GETS TO THE BOTTOM OF SCREEN
+  const handleScroll = async () => {
+
+    const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight
+    if (window.scrollY >= scrollableHeight) {
+      loading.classList.add('active');
+      posts.appendChild(loading);
+      const morePosts = await getNextFivePosts(lastPost)
+      count += 1
+      console.log('lastpost', count, lastPost.data())
+      if (morePosts.empty) {
+        document.removeEventListener('scroll', handleScroll) // REMOVE EVENT LISTENER IF NO MORE POSTS
+        loading.classList.remove('active');
+        return
+      }
+      lastPost = morePosts.docs[morePosts.docs.length - 1]; // UPDATE LAST POST
+      morePosts.forEach((post) => {
+        const postContent = post.data({
+          serverTimestamps: 'estimate',
+        });
+        const name = post.data().displayName || post.data().email;
+        const localDate = postContent.time.toDate().toLocaleDateString();
+        const localTime = postContent.time.toDate().toLocaleTimeString();
+        const {content} = post.data();
+        const email = getEmail();
+        const {likes}= post.data();
+        const docId = post.id;    
+        const spanLike = likeCount(email!, post, likes);
+        const postDiv = postCard(name, localDate, localTime, content, docId, spanLike);
+        posts.appendChild(postDiv);
+      })
+      loading.classList.remove('active');
+    }
+  }
   return feed;
 }
   
