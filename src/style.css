@@ -68,6 +68,24 @@
   }
 }
 
+@keyframes up {
+  0% {
+    opacity: 0;
+    transform: translateY(80%);
+  }
+  20% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -328,6 +346,7 @@ button.small-button {
   display: grid;
   gap: 1.5rem;
   min-width: 0;
+  margin-bottom: 5rem;
 }
 
 .card {
@@ -480,8 +499,14 @@ button.small-button {
   display: block;
   font-size: var(--fs-500);
   text-align: center;
-  text-shadow: 1px 1px 6px var(--clr-primary-200);
+  text-shadow: 
+  3px 3px 5px var(--clr-primary-200),
+  -3px -3px 5px var(--clr-primary-200),
+  3px -3px 5px var(--clr-primary-200),
+  -3px 3px 5px var(--clr-primary-200)
+  ;
   margin: 10px 0;
+  animation: 800ms up ease-out infinite;
 }
 
 /* --------- FONT AWESOME CLASSES --------- */

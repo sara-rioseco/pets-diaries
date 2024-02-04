@@ -111,6 +111,7 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
       posts.removeChild(posts.firstChild!);
     }
     lastPost = querySnapshot.docs[querySnapshot.docs.length - 1]; // UPDATE LAST POST
+    loading.classList.add('active');
     querySnapshot.forEach((post) => {
       const postContent = post.data({
         serverTimestamps: 'estimate',
@@ -125,8 +126,9 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
       const spanLike = likeCount(email!, post, likes);
       const postDiv = postCard(name, localDate, localTime, content, docId, spanLike);
       posts.appendChild(postDiv);
+      posts.appendChild(loading);
     });
-    posts.appendChild(loading);
+
     // ADD SCROLL EVENT AFTER ON SNAPSHOT
     document.addEventListener('scroll', handleScroll)
     const meow = async () => {
@@ -139,17 +141,14 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
   let count = 0
   // HANDLE SCROLL EVENT WHEN USER GETS TO THE BOTTOM OF SCREEN
   const handleScroll = async () => {
-
     const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight
     if (window.scrollY >= scrollableHeight) {
-      loading.classList.add('active');
-      posts.appendChild(loading);
       const morePosts = await getNextFivePosts(lastPost)
       count += 1
       console.log('lastpost', count, lastPost.data())
-      if (morePosts.empty) {
+      posts.removeChild(loading);
+      if (!morePosts) {
         document.removeEventListener('scroll', handleScroll) // REMOVE EVENT LISTENER IF NO MORE POSTS
-        loading.classList.remove('active');
         return
       }
       lastPost = morePosts.docs[morePosts.docs.length - 1]; // UPDATE LAST POST
@@ -167,8 +166,10 @@ export default function Feed(onNavigate: (pathname: Path) => void) {
         const spanLike = likeCount(email!, post, likes);
         const postDiv = postCard(name, localDate, localTime, content, docId, spanLike);
         posts.appendChild(postDiv);
+        // posts.appendChild(loading);
       })
-      loading.classList.remove('active');
+      posts.appendChild(loading);
+      // loading.classList.remove('active');
     }
   }
   return feed;

@@ -21,7 +21,7 @@ export const editModal = (
   cancelButton.textContent = 'Cancel';
   editButton.textContent = 'Edit';
   text.innerText = 'Edit your post:';
-  input.id = 'new-input';
+  input.id = `new-input-${docId.slice(0, 6)}`;
   input.classList.add('textarea');
   input.rows = 4;
   input.innerText = `${content}`;
@@ -31,7 +31,7 @@ export const editModal = (
   }
 
   editButton.addEventListener('click', async () => {
-    let newInput = document.getElementById('new-input')!.innerText;
+    let newInput = document.getElementById(`new-input-${docId.slice(0, 6)}`)!.innerText;
     newInput = input.value;
     await editPost(newInput, docId);
   });
