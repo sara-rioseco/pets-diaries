@@ -77,7 +77,7 @@ export function services() {
   const getNextFivePosts = async (lastPost: QueryDocumentSnapshot<DocumentData, DocumentData>) => {
     const morePosts = query(collection(db, 'posts'), orderBy('time', 'desc'), startAfter(lastPost), limit(5))
     const newPosts = await getDocs(morePosts)
-    return newPosts.empty ? null : newPosts;
+    return newPosts;
   };
 
   const getLikes = async (docRef: DocumentReference) : Promise<DocumentSnapshot<DocumentData, DocumentData>> => {
