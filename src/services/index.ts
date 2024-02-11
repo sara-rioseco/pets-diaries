@@ -23,10 +23,6 @@ import {
   getDoc,
   DocumentSnapshot,
   DocumentData,
-  getCountFromServer,
-  limit,
-  startAfter,
-  QueryDocumentSnapshot,
 } from 'firebase/firestore';
 import { auth, db } from '../firebase.ts';
 
@@ -67,18 +63,12 @@ export function services() {
   const userLogout = () => signOut(auth);
 
   // Firestore
-  const getPosts = async () => await getDocs(collection(db, 'posts'));
-
-  const getFirstPostsRef = () => {
-    const ref = query(collection(db, 'posts'), orderBy('time', 'desc'), limit(5));
+  const getPostsRef = () => {
+    const ref = query(collection(db, 'posts'), orderBy('time', 'desc'));
     return ref
-  };
+  }
 
-  const getNextFivePosts = async (lastPost: QueryDocumentSnapshot<DocumentData, DocumentData>) => {
-    const morePosts = query(collection(db, 'posts'), orderBy('time', 'desc'), startAfter(lastPost), limit(5))
-    const newPosts = await getDocs(morePosts)
-    return newPosts;
-  };
+  const getPosts = async () => await getDocs(collection(db, 'posts'));
 
   const getLikes = async (docRef: DocumentReference) : Promise<DocumentSnapshot<DocumentData, DocumentData>> => {
     const docSnap = await getDoc(docRef)
@@ -122,29 +112,6 @@ export function services() {
     }
   };
 
-  const countPosts = async () => {
-    const posts = collection(db, "posts");
-    const snapshot = await getCountFromServer(posts);
-    return snapshot.data().count; 
-  };
-
-  const paginateQuery = async (limitNum: number, order: 'desc' | 'asc', lastDoc?: DocumentSnapshot ) => {
-    if (lastDoc) {
-      // const first = query(collection(db, "posts"), orderBy('time', order), limit(limitNum));
-      // const docSnapshots = await getDocs(first);
-      // const lastVisible = docSnapshots.docs[docSnapshots.docs.length-1];
-      const next = query(collection(db, "posts"), orderBy('time', order),
-      startAfter(lastDoc),
-      limit(limitNum));
-      const nextSnap = await getDocs(next);
-      return nextSnap
-    } else {
-      const first = query(collection(db, "posts"), orderBy('time', order), limit(limitNum));
-      const docSnapshots = await getDocs(first);
-      return docSnapshots
-    }
-  };
-
   const addLike = async (docRef : DocumentReference): Promise<void> => {
       try { 
         updateDoc(doc(db, 'posts', docRef.id), {
@@ -175,15 +142,12 @@ export function services() {
     getDisplayName,
     getProfilePicture,
     userLogout,
-    getFirstPostsRef,
+    getPostsRef,
     getPosts,
-    getNextFivePosts,
     getLikes,
     createPost,
     editPost,
     deletePost,
-    countPosts,
-    paginateQuery,
     addLike,
     removeLike,
   };
