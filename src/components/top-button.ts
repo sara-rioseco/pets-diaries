@@ -7,7 +7,6 @@ export const topButton = (): HTMLElement => {
   button.title = 'Go to top';
   icon.classList.add('fa', 'fa-chevron-up');
 
-
   button.appendChild(icon);
   return button;
 }
