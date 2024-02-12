@@ -14,7 +14,7 @@ const routes: Routes = {
   '/feed': Feed,
   '/profile': Profile,
 };
-const onNavigate = (pathname: Path, root: HTMLElement = rootDiv): void => {
+export const onNavigate = (pathname: Path, root: HTMLElement = rootDiv): void => {
   window.history.pushState({}, pathname, window.location.origin + pathname);
   while (root.firstChild) {
     root.removeChild(root.firstChild);

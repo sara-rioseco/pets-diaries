@@ -19,10 +19,6 @@ import {
   DocumentReference,
   orderBy,
   query,
-  getDocs,
-  getDoc,
-  DocumentSnapshot,
-  DocumentData,
 } from 'firebase/firestore';
 import { auth, db } from '../firebase.ts';
 
@@ -66,13 +62,6 @@ export function services() {
   const getPostsRef = () => {
     const ref = query(collection(db, 'posts'), orderBy('time', 'desc'));
     return ref
-  }
-
-  const getPosts = async () => await getDocs(collection(db, 'posts'));
-
-  const getLikes = async (docRef: DocumentReference) : Promise<DocumentSnapshot<DocumentData, DocumentData>> => {
-    const docSnap = await getDoc(docRef)
-    return docSnap.exists() ? docSnap.data().likes : null
   }
 
   const createPost = async (text: string) => {
@@ -137,14 +126,11 @@ export function services() {
     updateUser,
     userLogin,
     googleLogin,
-    getCurrentUser,
     getEmail,
     getDisplayName,
     getProfilePicture,
     userLogout,
     getPostsRef,
-    getPosts,
-    getLikes,
     createPost,
     editPost,
     deletePost,
