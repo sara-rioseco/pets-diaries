@@ -35,7 +35,7 @@ export function services() {
     options: { displayName?: string, photoURL?: string }
   ): Promise<void> => {
     const loggedUser = auth.currentUser!;
-    await loggedUser!.getIdToken(true);
+    // await loggedUser!.getIdToken(true);
     const updateUsername = await updateProfile(loggedUser, options);
     return updateUsername
   }
@@ -126,6 +126,7 @@ export function services() {
     updateUser,
     userLogin,
     googleLogin,
+    getCurrentUser,
     getEmail,
     getDisplayName,
     getProfilePicture,
