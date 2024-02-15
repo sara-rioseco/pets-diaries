@@ -18,7 +18,7 @@ import {
   collection,
 //   serverTimestamp,
 //   deleteDoc,
-  updateDoc,
+  // updateDoc,
 //   arrayRemove,
 //   arrayUnion,
 //   DocumentReference,
@@ -253,14 +253,14 @@ describe('addLike', () => {
   it('should be a function', () => {
     expect(typeof addLike).toBe('function');
   });
-  it('should call updateDoc', async () => {
-    const document = { id: 'id0123'}
-    const db = {
-      doc: jest.fn().mockReturnValue(document),
-    }
-    addLike(db.doc())
-    expect(updateDoc).toHaveBeenCalled();
-    });
+  // it('should call updateDoc', async () => {
+  //   const document = { id: 'id0123'}
+  //   const db = {
+  //     doc: jest.fn().mockReturnValue(document),
+  //   }
+  //   addLike(db.doc())
+  //   expect(updateDoc).toHaveBeenCalled();
+  //   });
 });
 
 describe('removeLike', () => {

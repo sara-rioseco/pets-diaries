@@ -12,9 +12,8 @@ export default function Login(onNavigate: (pathname: Path) => void) {
   const title = document.createElement('h2');
   const contentDiv = document.createElement('div');
 
-  const emailInput = input('Email', 'login-email')
+  const emailInput = input('Email', 'login-email');
   const passwordInput = input('Password', 'login-password', 'password');
-
 
   const loginBttn = document.createElement('button');
   const homeBttn = document.createElement('button');
@@ -34,7 +33,7 @@ export default function Login(onNavigate: (pathname: Path) => void) {
 
   loginDiv.className = 'home-div';
   contentDiv.className = 'content-wrapper';
-  googleButton.innerHTML = `${logoGoogle}`
+  googleButton.innerHTML = `${logoGoogle}`;
 
   title.textContent = 'Log into your account';
   loginBttn.textContent = 'Login';
@@ -43,12 +42,16 @@ export default function Login(onNavigate: (pathname: Path) => void) {
   logoImg.addEventListener('click', () => about.showModal());
   homeBttn.addEventListener('click', () => onNavigate('/'));
   loginBttn.addEventListener('click', () => {
-    const email = (<HTMLInputElement>document.getElementById('login-email')).value;
-    const password = (<HTMLInputElement>document.getElementById('login-password')).value;
-    userLogin(email, password).then(() => {
+    const email = (<HTMLInputElement>document.getElementById('login-email'))
+      .value;
+    const password = (<HTMLInputElement>(
+      document.getElementById('login-password')
+    )).value;
+    userLogin(email, password).then(
+      () => {
         onNavigate('/feed');
       },
-      () => alert('Invalid credentials'),
+      () => alert('Invalid credentials')
     );
   });
 
@@ -57,7 +60,7 @@ export default function Login(onNavigate: (pathname: Path) => void) {
       () => {
         onNavigate('/feed');
       },
-      () => alert('Invalid credentials'),
+      () => alert('Invalid credentials')
     );
   });
 
