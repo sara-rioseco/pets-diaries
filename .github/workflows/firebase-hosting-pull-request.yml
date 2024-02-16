@@ -19,3 +19,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_PETS__DIARIES }}'
           channelId: live
           projectId: pets--diaries
+

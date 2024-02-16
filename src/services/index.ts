@@ -23,7 +23,6 @@ import {
 import { auth, db } from '../firebase.ts';
 
 export function services() {
-
   // Authentication
   const createUser = (
     email: string,
@@ -31,14 +30,14 @@ export function services() {
   ): Promise<UserCredential> =>
     createUserWithEmailAndPassword(auth, email, password);
 
-  const updateUser = async (
-    options: { displayName?: string, photoURL?: string }
-  ): Promise<void> => {
+  const updateUser = async (options: {
+    displayName?: string;
+    photoURL?: string;
+  }): Promise<void> => {
     const loggedUser = auth.currentUser!;
-    await loggedUser!.getIdToken(true);
     const updateUsername = await updateProfile(loggedUser, options);
-    return updateUsername
-  }
+    return updateUsername;
+  };
 
   const userLogin = (
     email: string,
@@ -49,7 +48,7 @@ export function services() {
   const googleLogin = async () => {
     const provider = new GoogleAuthProvider();
     const userAuth = await signInWithPopup(auth, provider);
-    return userAuth
+    return userAuth;
   };
   const getCurrentUser = () => auth.currentUser;
   const getEmail = () => auth.currentUser!.email;
@@ -61,63 +60,61 @@ export function services() {
   // Firestore
   const getPostsRef = () => {
     const ref = query(collection(db, 'posts'), orderBy('time', 'desc'));
-    return ref
-  }
+    return ref;
+  };
 
   const createPost = async (text: string) => {
     try {
       const doc = await addDoc(collection(db, 'posts'), {
-      content: text,
-      time: serverTimestamp(),
-      email: auth.currentUser!.email,
-      displayName: auth.currentUser!.displayName,
-      likes: [],
-      })
-      return doc
-    } catch (e : unknown) {
-      throw new Error(`${e}`);
-    } 
+        content: text,
+        time: serverTimestamp(),
+        email: auth.currentUser!.email,
+        displayName: auth.currentUser!.displayName,
+        likes: [],
+      });
+      return doc;
+    } catch (e: unknown) {
+      throw Error(`${e}`);
+    }
   };
 
   const editPost = async (newInput: string, docId: string) => {
     const docRef: DocumentReference = doc(db, 'posts', docId);
-      try {
-      await (getCurrentUser()!).getIdToken(true);
+    try {
       await updateDoc(docRef, {
         content: `${newInput}`,
       });
     } catch (e) {
-      throw new Error(`${e}`)
+      throw Error(`${e}`);
     }
   };
 
   const deletePost = async (docId: string) => {
     const docRef: DocumentReference = doc(db, 'posts', docId);
     try {
-      await (getCurrentUser()!).getIdToken(true);
       await deleteDoc(docRef);
     } catch (e) {
-      throw new Error(`${e}`)
+      throw new Error(`${e}`);
     }
   };
 
-  const addLike = async (docRef : DocumentReference): Promise<void> => {
-      try { 
-        updateDoc(doc(db, 'posts', docRef.id), {
+  const addLike = async (docRef: DocumentReference): Promise<void> => {
+    try {
+      updateDoc(doc(db, 'posts', docRef.id), {
         likes: arrayUnion(getEmail()),
-      })
-      } catch (e) {
-        throw new Error(`${e}`);    
-      }
+      });
+    } catch (e) {
+      throw new Error(`${e}`);
+    }
   };
 
-  const removeLike = async (docRef : DocumentReference): Promise<void> => {
+  const removeLike = async (docRef: DocumentReference): Promise<void> => {
     try {
       updateDoc(doc(db, 'posts', docRef.id), {
         likes: arrayRemove(getEmail()),
       });
     } catch (e) {
-      throw new Error(`${e}`);      
+      throw new Error(`${e}`);
     }
   };
 
@@ -126,6 +123,7 @@ export function services() {
     updateUser,
     userLogin,
     googleLogin,
+    getCurrentUser,
     getEmail,
     getDisplayName,
     getProfilePicture,
