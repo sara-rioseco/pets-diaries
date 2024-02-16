@@ -35,7 +35,6 @@ export function services() {
     photoURL?: string;
   }): Promise<void> => {
     const loggedUser = auth.currentUser!;
-    await loggedUser!.getIdToken(true);
     const updateUsername = await updateProfile(loggedUser, options);
     return updateUsername;
   };
@@ -75,26 +74,24 @@ export function services() {
       });
       return doc;
     } catch (e: unknown) {
-      throw new Error(`${e}`);
+      throw Error(`${e}`);
     }
   };
 
   const editPost = async (newInput: string, docId: string) => {
     const docRef: DocumentReference = doc(db, 'posts', docId);
     try {
-      await getCurrentUser()!.getIdToken(true);
       await updateDoc(docRef, {
         content: `${newInput}`,
       });
     } catch (e) {
-      throw new Error(`${e}`);
+      throw Error(`${e}`);
     }
   };
 
   const deletePost = async (docId: string) => {
     const docRef: DocumentReference = doc(db, 'posts', docId);
     try {
-      await getCurrentUser()!.getIdToken(true);
       await deleteDoc(docRef);
     } catch (e) {
       throw new Error(`${e}`);
